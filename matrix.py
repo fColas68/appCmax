@@ -1,5 +1,12 @@
 # to use distributions and seed
 import random
+import statistics as stat
+import scipy.stats as sc
+# from scipy.stats.mstats import gmean as sc
+# from scipy.stats.mstats import hmean as sc
+
+
+
 
 # tools libraries
 import pwa
@@ -32,8 +39,10 @@ class PTimes:
 
     # List and Computed results with original times List
     :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en]
-    :param n                             : Integer: Jobs number. n > 0 for the original 
+    :param n                             : Integer: Jobs number. n > 0 for the original
+    -----
     :param LowBound                      : Float  : known low bound
+    :param StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
     -----
     :param Results                       : tuples list of the results obtained with each algorithm, from the original time list.
                                            [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
@@ -46,6 +55,9 @@ class PTimes:
     # List and Computed results with times List completed with m-1 job times
     :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en']
     :param m1_n                          : Integer: new number of times set
+    -----    
+    :param m1LowBound                    : Float  : known low bound
+    :param m1StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
     :param m1Optimal                     : Float  : known optimal 
     -----
     :param m1Results                     : Tuples List of the results obtained with each algorithm, from the completed time list.
@@ -70,7 +82,8 @@ class PTimes:
     # origin problem instance (not completed)
     Times                          = []
     n                              = 0
-    LowBound                       = 0.0 
+    LowBound                       = 0.0
+    StatIndicators                 = None
     Results                        = []
     BestResult_Makespan            = 0.0
     BestResult_MakespanAlgorithm   = ""
@@ -80,7 +93,8 @@ class PTimes:
     # completed problem instance (with m-1 tasks completion)
     m1Times                        = []
     m1_n                           = 0
-    m1LowBound                     = 0.0 
+    m1LowBound                     = 0.0
+    m1StatIndicators               = None
     m1Optimal                      = []
     m1Results                      = []
     m1BestResult_Makespan          = 0.0
@@ -122,6 +136,8 @@ class PTimes:
         nichts
         
         """
+        self.Result = []
+        self.m1Result = []
         # =======================================================================
         # generation properties
         # =======================================================================
@@ -186,7 +202,8 @@ class PTimes:
         #-------------------------------------------------------
         # 
         #-------------------------------------------------------
-        self.LowBound = getLowBound(self.Times, self.m) 
+        self.LowBound = getLowBound(self.Times, self.m)
+        self.StatIndicators = getStatIndicators(self.Times, self.m)
         
         # =======================================================================
         # self.m1Times generation
@@ -260,9 +277,10 @@ class PTimes:
         #------------------------------------------------------------------------
         #   Update self concerned values
         #------------------------------------------------------------------------
-        self.m1_n       = new_n
-        self.m1LowBound = getLowBound(self.m1Times, self.m)
-        self.m1Optimal  = Cmax
+        self.m1_n               = new_n
+        self.m1LowBound         = getLowBound(self.m1Times, self.m)
+        self.m1StatIndicators   = getStatIndicators(self.Times, self.m)
+        self.m1Optimal          = Cmax
 
     # ============================================================================
     # GET SEED
@@ -275,10 +293,14 @@ class PTimes:
     # ============================================================================
     def addSched(self, sched):
         self.Results.append(sched)
+        
+        # for best time algorithm
         if (sched.getTime() < self.BestResult_Time) or (self.BestResult_Time == 0.0):
             self.BestResult_Time              = sched.getTime()
             self.BestResult_TimeAlgorithm     = sched.getAlgoName()
         # END IF
+
+        # for best sched Cmax algorithm
         if (sched.getMakespan() < self.BestResult_Makespan) or (self.BestResult_Makespan == 0.0):
             self.BestResult_Makespan          = sched.getMakespan()
             self.BestResult_MakespanAlgorithm = sched.getAlgoName()
@@ -289,23 +311,24 @@ class PTimes:
     # ============================================================================
     def addM1Sched(self, sched):
         self.m1Results.append(sched)
+
+        # for best time algorithm
         if (sched.getTime() < self.m1BestResult_Time)  or (self.m1BestResult_Time == 0.0):
             self.m1BestResult_Time              = sched.getTime()
             self.m1BestResult_TimeAlgorithm     = sched.getAlgoName()
         # END IF
+
+        # for best sched Cmax algorithm
         if (sched.getMakespan() < self.m1BestResult_Makespan) or (self.m1BestResult_Makespan == 0.0):
             self.m1BestResult_Makespan          = sched.getMakespan()
             self.m1BestResult_MakespanAlgorithm = sched.getAlgoName()
         # END IF
     # ============================================================================
     #  getResult
-    #  for pandas dataframe
+    #  Summary for pandas dataframe
     # ============================================================================
     def getResult(self):
-        res = [self.generateMethode,
-               self.m, self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed,
-               self.n,    self.LowBound,   self.BestResult_MakespanAlgorithm,   self.BestResult_Makespan,    self.BestResult_TimeAlgorithm,   self.BestResult_Time,   
-               self.m1_n, self.m1LowBound, self.m1BestResult_MakespanAlgorithm, self.m1BestResult_Makespan,  self.m1BestResult_TimeAlgorithm, self.m1BestResult_Time, self.m1Optimal]
+        res = [self.generateMethode, self.m, self.seed, self.n, self.LowBound, self.m1_n, self.m1LowBound, self.m1Optimal]
         #----------------------------------------
         # Results and m1Results lists structures
         #
@@ -313,20 +336,47 @@ class PTimes:
         #----------------------------------------
         res.append("Results")
         for k in range(len(self.Results)):
-            sc = self.Results[k].getResult()    # sched object
+            sc = self.Results[k].getResult()    # self.Results[k] = sched object
             res.append(sc)  
         # END FOR
 
         res.append("m1Results")
         for k in range(len(self.m1Results)):
-            sc = self.m1Results[k].getResult()  # sched object
+            sc = self.m1Results[k].getResult()  # self.m1Results[k].getResult() = sched object
             res.append(sc) 
         # END FOR
         
         #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
         return res
-         
+        
+    # ============================================================================
+    #  getResultDetailed 
+    #  for pandas dataframe
+    # ============================================================================
+    def getResultDetailed(self):
+        res = [self.generateMethode,
+               self.m, self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed,
+               self.n,    self.LowBound,    self.StatIndicators,   self.BestResult_MakespanAlgorithm,   self.BestResult_Makespan,    self.BestResult_TimeAlgorithm,   self.BestResult_Time,   
+               self.m1_n, self.m1LowBound,  self.m1StatIndicators, self.m1BestResult_MakespanAlgorithm, self.m1BestResult_Makespan,  self.m1BestResult_TimeAlgorithm, self.m1BestResult_Time, self.m1Optimal]
+        #----------------------------------------
+        # Results and m1Results lists structures
+        #
+        # [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
+        #----------------------------------------
+        res.append("Results")
+        for k in range(len(self.Results)):
+            sc = self.Results[k].getResult()    # self.Results[k] = sched object
+            res.append(sc)  
+        # END FOR
 
+        res.append("m1Results")
+        for k in range(len(self.m1Results)):
+            sc = self.m1Results[k].getResult()  # self.m1Results[k].getResult() = sched object
+            res.append(sc) 
+        # END FOR
+        
+        #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
+        return res
 
 # ############################################################################
 # ############################################################################
@@ -398,14 +448,82 @@ def real_p(fileName):
     matrix = pwa.pwaFileRead(fileName)
     return matrix
 
+# ############################################################################
+# ############################################################################
+#
+#                    Statistics for times lists
+#
+# ############################################################################
+# ############################################################################
 
 # ============================================================================
-# 
+# LowBound : max(largest time, mean time per machine/processor)
 # ============================================================================
-def getLowBound(list, m):
-    return max(max(list), sum(list)/m)
+def getLowBound(l, m):
+    if m != 0:
+        return max(max(l), sum(l)/m)
+    else:
+        return max(max(l))
 
+# ============================================================================
+# getWorkTime : Total work  
+# ============================================================================
+def getWorkTime(l):
+    return sum(l)
 
+# ============================================================================
+#  getMeanTime : Mean Work
+# ============================================================================
+def getMeanTimePerMachine(l, m):
+    if m != 0:
+        return sum(l)/m
+    else:
+        return 0
+# ============================================================================
+# getIndicators
+# descriptive statistical indicators.
+#
+# return tuple
+#   Related to the problem*
+#       meanPerMachine,
+#       Work_Time, 
+#   Descriptive
+#       mean (Arithmetical)
+#       mean (Geometric)
+#       mean (harmonic)
+#       median
+#       Mode
+#       Minimum
+#       Maximum
+#   Dispersion
+#       Standard Deviation  (with mu = arithmetic mean)  fr:écart type
+#       Variance            (with mu = arithmetic mean) 
+#       not the Quartiles
+# ============================================================================
+def getStatIndicators(l, m):
+    """
+    input
+      l : List : set of times
+      m : int. Number of parallel machines
+    Return a tuple with followings values
+      meanPerMachine, Work_Time, mean (Arithmetical), mean (Geometric); mean (harmonic); median; mode, minimum, maximum, standard_deviation, variance
+    """
+    
+    # ----------------------------------------------------------
+    # mu
+    # to call it one time (used in mean, pstdev and pvariance)
+    # if this parameter is not injected into pstdev and pvariance,
+    # these functions re compute the mean.
+    # ----------------------------------------------------------
+    mu = stat.mean(l)
+    return (    getMeanTimePerMachine(l, m),
+                getMeanTimePerMachine(l, m),
+                stat.mean(l),
+                sc.gmean(l),
+                sc.hmean(l),
+                stat.median(l),
+                min(l), max(l),
+                stat.pstdev(l,mu),
+                stat.pvariance(l, mu))
 
-
-
+    # stat.mode(l),
