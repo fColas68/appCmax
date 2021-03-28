@@ -8,16 +8,27 @@ from operator import attrgetter
 # part of schedule (Processor = machine)
 # ########################################################################
 class Processor:
-    jobsTotal  = 0.0     # Stores the total time of the jobs loaded in the list.
-    jobsGap    = 0.0     # stores the time span between the first and last job loaded in the list.
-    jobsSet    = []      # Stores jobs
-
+    # =============================================
+    # CONSTRUCTOR
+    # =============================================
     def __init__(self):
+        """
+        :Param jobsTotal  :float = 0.0     # Stores the total time of the jobs loaded in the list.
+        :param jobsGap    :float = 0.0     # stores the time span between the first and last job loaded in the list.
+        :param jobsSet    :list  = []      # Stores jobs
+        """
         self.jobsTotal  = 0.0
         self.jobsGap    = 0.0
         self.jobsSet    = []
-    
+    # =============================================
+    # addJOB
+    # =============================================
     def addJob(self, jobTime):
+        """
+        Add jobTime to the list self.jobsSet
+        compute gap between max job and min job
+        compute total jobs time
+        """
         m = self.jobsSet[:]  # add item in the list
         m.append(jobTime)    # self.jobsSet.append(jobTime)        
         self.jobsSet = m[:]  # ---------------------
@@ -25,6 +36,9 @@ class Processor:
         self.getTotal()      # total <=> self.jobsLoaded+=jobTime
         self.getGap()        # gap for slack <=> self.jobsSet[0]-jobTime
 
+    # =============================================
+    # Get
+    # =============================================
     def getGap(self):
         self.jobsGap = max(self.jobsSet)-min(self.jobsSet)
         return self.jobsGap
@@ -40,6 +54,9 @@ class Processor:
         return self.jobsSet[k]
     
     def razJobsSet(self):
+        """
+        raz object instance values
+        """
         self.jobsTotal  = 0.0
         self.jobsGap    = 0.0
         self.jobsSet    = []
@@ -51,10 +68,6 @@ class Processor:
 # list of pocessors
 # ########################################################################
 class ldmTuple:
-    tupl          = []
-    m             = 0
-    tuplTotal     = 0.0
-    tuplGap       = 0.0
     # =============================================
     # CONSTRUCTOR
     # =============================================
@@ -63,6 +76,12 @@ class ldmTuple:
         like ldm rule, Create a m-tuple with empty items
         e.g m = 5 [[],[],[],[],[]]
         each item is a Processor object
+
+        :param tupl      : list  = []  as defined in the ldm algorithm. List of m Processors objects
+        :param m         : int   = 0   number of machines(=procesors)
+        :param tuplTotal : float = 0.0 stores the total time stored in each processor.
+        :param tuplGap   : float = 0.0 stores the difference between the least loaded processor and the most loaded processor.
+                                       Allows tuples to be sorted by this value, as described in the LDM algorithm.
         """
         self.m          = m
         self.tuplTotal  = 0.0
@@ -77,12 +96,18 @@ class ldmTuple:
     # =============================================
     def initialize(self, value):
         """
-        like LDM rule, affect the value to the last item of the ldmTuple
+        Affect the value to the last item of the ldmTuple, like LDM rule, 
+        e.g for m = 3 and value = 2 then tupl = [ processor1.jobsSet=[], processor2.jobsSet=[], processor3.jobsSet=[2] ]
+        compute (and stores) tuplTotal
+        compute (and stores) tuplGap
         """
         self.tupl[self.m - 1].addJob(value)
         self.getTotal()
         self.getGap()
         
+    # =============================================
+    # GET
+    # =============================================
     def getTotal(self):
         total = 0.0
         for i in range(len(self.tupl)):
@@ -103,7 +128,9 @@ class ldmTuple:
         self.tuplGap = gap
         #
         return self.tuplGap
-    
+    # =============================================
+    # smaler (index of smaler loaded Processor)
+    # =============================================
     def smaler(self):
         """
         return the index in the list tupl so the processor has the smallest sum.
@@ -124,7 +151,9 @@ class ldmTuple:
             # END IF
         # END FOR
         return res
-
+    # =============================================
+    # largest (index of largest loaded Processor)
+    # =============================================
     def largest(self):
         """
         return the index in the list tupl so the processor has the largest sum.
@@ -141,7 +170,13 @@ class ldmTuple:
         # END FOR
         return res
 
+    # =============================================
+    # getProcessor 
+    # =============================================
     def getProcessor(self, m):
+        """
+        return Processor object from tuple index m
+        """
         return self.tupl[m]
     
 
@@ -152,9 +187,6 @@ class ldmTuple:
 # list of ldmTuple
 # ########################################################################
 class ldmPartition():
-    part = [] # list of ldmTuple
-    m    = 0
-
     # =============================================
     # CONSTRUCTOR
     # =============================================
@@ -162,6 +194,9 @@ class ldmPartition():
         """
         Store in self.part (list) n ldmTuple
         each ldmTuple is an Object with tuplTotal tuplGap computed and ldmTuple.tupl (list ) filled with m Processors
+        :param times (--> part) : list (see below)
+        :param m                : int = 0 number of machines
+        
         part ==> ldmTuple1                   - ldmTuple2 - ... - ldmTuple1n
                  -------------------           ---------         -------------------
                  ldmTuple1.tuplTotal           ...               ldmTuplen.tuplTotal
@@ -250,7 +285,8 @@ class ldmPartition():
         """
         ldmTuple1 = self.part[tupl1Indice] 
         ldmTuple2 = self.part[tupl2Indice] 
-        
+
+        # m times :as many as there are machines
         for m in range(self.m):
             
             # LARGEST : index in the ldmTuple2 so the processor has the largest sum.
@@ -258,16 +294,22 @@ class ldmPartition():
             # SMALEST : ndex in the ldmTuple1 so the processor has the smallest sum.
             smaller = ldmTuple1.smaler()
 
+            #each job from the most loaded processor (of tuple 2), into the least loaded processor (of tuple 1)
             for k in range(ldmTuple2.getProcessor(largest).getJobsSetSize()):
                 ldmTuple1.getProcessor(smaller).addJob(ldmTuple2.getProcessor(largest).getJobTime(k))
-            # END FOR
+            # END FOR (for k in range(ldmTuple2.getProcessor(largest).getJobsSetSize()):)
+
+            # raz of tuple 2 processor
             ldmTuple2.getProcessor(largest).razJobsSet()
-        
+
+            # recompute values gap and total
             ldmTuple1.getGap()
             ldmTuple1.getTotal()
             
-        # END FOR
-        
+        # END FOR (for m in range(self.m):)
+
+        # tuple 2 is merged with tuple 1
+        # delete tuple 2
         self.part.pop(tupl2Indice)
         
 
@@ -278,19 +320,26 @@ class ldmPartition():
 # Structure to store a scheduling result
 # ########################################################################
 class PSched:
-    algoName     = ""
-    timeExpected = 0.0
-    makespan     = 0.0
-    time         = 0.0
-    sched        = []
-
+    # =============================================
+    # CONSTRUCTOR
+    # =============================================
     def __init__(self, algoName, timeExpected, makespan, time, sched):
+        """
+        :param algoName     : String name of algoritm
+        :param timeExpected : float teorical time expected
+        :param makespan     : float Cmax found
+        :param time         : float time it took to find Cmax (seconds)
+        :param sched        : list (of Processors objects) result of scheduling
+
+        """
         self.algoName     = algoName 
         self.timeExpected = timeExpected 
         self.makespan     = makespan 
         self.time         = time 
         self.sched        = sched
-        
+    # =============================================
+    # GET  (__str__ not used)
+    # =============================================
     def __str__(self):
         return ""
 
@@ -310,7 +359,23 @@ class PSched:
         return self.sched
     
     def getResult(self):
-        return (self.algoName, self.timeExpected, self.makespan, self.time)
+        """
+        return result of schediling
+        is call by campaign.py to store it in data frame
+        *** can be modified according to the requirements of the results extraction program. ***
+        """
+        return [self.algoName, self.timeExpected, self.makespan, self.time]
+        #return self.algoName, self.timeExpected, self.makespan, self.time
+
+
+
+
+
+
+
+
+
+
 
 # rec = lambda x: sum(map(rec, x)) if isinstance(x, list) else x
         

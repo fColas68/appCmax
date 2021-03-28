@@ -1,12 +1,6 @@
-# to use distributions and seed
-import random
-import statistics as stat
-import scipy.stats as sc
-# from scipy.stats.mstats import gmean as sc
-# from scipy.stats.mstats import hmean as sc
-
-
-
+import random              # to use distributions and seed
+import statistics as stat  # to compute arithmaetic mean
+import scipy.stats as sc   # to compute harmonic_mean and geometric_mean
 
 # tools libraries
 import pwa
@@ -17,91 +11,8 @@ import pwa
 # ############################################################################
 class PTimes:
     """
-    ##> management of the PTimes object: time list. 
-
-    # Generation properties
-    :param generateMethode: STRING describe how this list is generated.
-                            "GAMMA"
-                            "BETA"
-                            "EXPONENTIAL"  
-                            "UNIFORM"      uniform instencies generation LORI and MARTELLO)
-                            "NON_UNIFORM"  non uniform instencies generation LORI and MARTELLO)
-                            "REAL"         from workload archive - www.cs.huji.ac.il/labs/parallel/workload
-    :param m              : Integer Machine number. 0 <= m < n. 0 if problemType = "P" and completedM1 = False
-    :param a              : a value for uniform and non uniform generation
-    :param b              : b value for uniform and non uniform generation
-    :param alpha          : alpha value for beta and gamma generation
-    :param beta           : beta value for gamma generation (beta value for beta is equal 1)
-    :param lamlbd         : lambda value for exponential generation
-    :param fileName       : String  (complete filename) for PWA (Parallel Workload Archive) import
-    :param seed           : Integer if none : seed is randomly (random library) générated, and used to générate times list
-                                        if set  : seed is used to retrieve and regenerate a previously generated time list.
-
-    # List and Computed results with original times List
-    :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en]
-    :param n                             : Integer: Jobs number. n > 0 for the original
-    -----
-    :param LowBound                      : Float  : known low bound
-    :param StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
-    -----
-    :param Results                       : tuples list of the results obtained with each algorithm, from the original time list.
-                                           [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
-    :param BestResult_Makespan           : Float  : Best Makespan obtained (closer to the lower bound)
-    :param BestResult_MakespanAlgorithm  : String : Which algo got the best Makespan
-    :param BestResult_Time               : float  : Best Time obtained (lower time)
-    :param BestResult_TimeAlgorithm      : String : Which algo got the best time
-
-
-    # List and Computed results with times List completed with m-1 job times
-    :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en']
-    :param m1_n                          : Integer: new number of times set
-    -----    
-    :param m1LowBound                    : Float  : known low bound
-    :param m1StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
-    :param m1Optimal                     : Float  : known optimal 
-    -----
-    :param m1Results                     : Tuples List of the results obtained with each algorithm, from the completed time list.
-                                           [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
-    :param m1BestResult_Makespan         : FLOAT  : Best Makespan obtained (closer to the known m1Optimal)
-    :param m1BestResult_MakespanAlgorithm: String : Which algo got the best Makespan
-    :param m1BestResult_Time             : Float  : Best Time obtained (lower time)
-    :param m1BestResult_TimeAlgorithm    : String :Which algo got the best time
-    :return: nichts
+    management of the PTimes object: time list. 
     """
-    # Generation properties 
-    generateMethode                = ""
-    m                              = 0
-    a                              = 0.0
-    b                              = 0.0
-    alpha                          = 1.0
-    beta                           = 1.0
-    lambd                          = 1.0 # not lambda (with a) because reserved word
-    seed                           = 0
-    fileName                       = ""
-    
-    # origin problem instance (not completed)
-    Times                          = []
-    n                              = 0
-    LowBound                       = 0.0
-    StatIndicators                 = None
-    Results                        = []
-    BestResult_Makespan            = 0.0
-    BestResult_MakespanAlgorithm   = ""
-    BestResult_Time                = 0.0
-    BestResult_TimeAlgorithm       = ""
-
-    # completed problem instance (with m-1 tasks completion)
-    m1Times                        = []
-    m1_n                           = 0
-    m1LowBound                     = 0.0
-    m1StatIndicators               = None
-    m1Optimal                      = []
-    m1Results                      = []
-    m1BestResult_Makespan          = 0.0
-    m1BestResult_MakespanAlgorithm = ""
-    m1BestResult_Time              = 0.0
-    m1BestResult_TimeAlgorithm     = ""
-
     # ############################################################################
     #
     #                               CONSTRUCTOR
@@ -109,8 +20,60 @@ class PTimes:
     # ############################################################################
     def __init__(self, generateMethode, n, m, a=1.0, b=100.0, alpha=1.0, beta=1.0, lambd=1.0, fileName="", seed = None):
         """
+        :param generateMethode: STRING describe how this list is generated.
+                                "GAMMA"
+                                "BETA"
+                                "EXPONENTIAL"  
+                                "UNIFORM"      uniform instencies generation LORI and MARTELLO)
+                                "NON_UNIFORM"  non uniform instencies generation LORI and MARTELLO)
+                                "REAL"         from workload archive - www.cs.huji.ac.il/labs/parallel/workload
+        :param m              : Int Machine number. 0 <= m < n. 0 if problemType = "P" and completedM1 = False
+        :param a              : int = 1     a value for uniform and non uniform generation
+        :param b              : int = 100   b value for uniform and non uniform generation
+        :param alpha          : float = 1.0 alpha value for beta and gamma generation
+        :param beta           : float = 1.0 beta value for gamma generation (beta value for beta is equal 1)
+        :param lamlbd         : float = 1.0 lambda value for exponential generation
+        :param fileName       : String  = [](complete filename) for PWA (Parallel Workload Archive) import
+        :param seed           : Int   = None
+                                    if none : seed is randomly (random library) générated, and used to générate times list
+                                    if set  : seed is used to retrieve and regenerate a previously generated time list.
+        ----------------------------------------------------
+        List and Computed results with original times List
+        ----------------------------------------------------
+        :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en]
+        :param n                             : Integer: Jobs number. n > 0 for the original
+        ----------
+        :param LowBound                      : Float  : known low bound
+        :param StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
+        ----------
+        :param Results                       : tuples list of the results obtained with each algorithm, from the original time list.
+                                           [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
+        :param BestResult_Makespan           : Float  : Best Makespan obtained (closer to the lower bound)
+        :param BestResult_MakespanAlgorithm  : String : Which algo got the best Makespan
+        :param BestResult_Time               : float  : Best Time obtained (lower time)
+        :param BestResult_TimeAlgorithm      : String : Which algo got the best time
+
+        ----------------------------------------------------
+        List and Computed results with times List completed with m-1 job times
+        ----------------------------------------------------
+        :param Times                         : List   : of Pj : set of times   : [e1, e2, ... en']
+        :param m1_n                          : Integer: new number of times set
+        ----------    
+        :param m1LowBound                    : Float  : known low bound
+        :param m1StatIndicators                : tuple of Floats  : meanPerMachine, Work_Time, mean (Arithmetical),mean (Geometric);mean (harmonic);median;mode,minimum,maximum,standard_deviation,variance
+        :param m1Optimal                     : Float  : known optimal 
+        ----------
+        :param m1Results                     : Tuples List of the results obtained with each algorithm, from the completed time list.
+                                               [(ALGORITHM1, computed makespan, computation time, resultMatrix []),...,(ALGORITHMp, computed makespan, computation time, resultMatrix[])]
+        :param m1BestResult_Makespan         : FLOAT  : Best Makespan obtained (closer to the known m1Optimal)
+        :param m1BestResult_MakespanAlgorithm: String : Which algo got the best Makespan
+        :param m1BestResult_Time             : Float  : Best Time obtained (lower time)
+        :param m1BestResult_TimeAlgorithm    : String :Which algo got the best time
         create Lists instances with
-        # Input
+
+        ************************************ __INIT__ method ************************************
+
+        # Input -----------------------------------
         :param generateMethode: STRING describe how this matrix is generated. 
         :param n              : Integer Jobs number. n > 0
         :param m              : Integer Machine number. 0 <= m < n. 0 if problemType = "P" and completedM1 = False
@@ -123,7 +86,7 @@ class PTimes:
         :param seed           : Integer if none : seed is randomly (random library) générated, and used to générate times list
                                         if set  : seed is used to retrieve and regenerate a previously generated time list.
 
-        # Computed
+        # Computed --------------------------------
         Times                 
         n                     
         LowBound
@@ -131,24 +94,24 @@ class PTimes:
         m1_n
         m1LowBound
         m1Optimal
-
-        # Output
-        nichts
         
+        # Output ---------------------------------
+        nichts
         """
-        self.Result = []
-        self.m1Result = []
         # =======================================================================
         # generation properties
         # =======================================================================
-        self.generateMethode    = generateMethode
-        self.m                  = m 
-        self.a                  = a
-        self.b                  = b
-        self.alpha              = alpha
-        self.beta               = beta
-        self.lambd              = lambd
-        self.fileName           = fileName
+        self.generateMethode                = generateMethode
+        self.m                              = m
+        #-------------------------------------------------------
+        # 
+        #-------------------------------------------------------
+        self.a                              = a
+        self.b                              = b
+        self.alpha                          = alpha
+        self.beta                           = beta
+        self.lambd                          = lambd      # not lambda (with a) because reserved word 
+        self.fileName                       = fileName
         #-------------------------------------------------------
         # SEED
         #-------------------------------------------------------
@@ -157,12 +120,33 @@ class PTimes:
         else:
             self.seed = random.randint(1,10000)
         # END IF
-        
+
         # =======================================================================
-        # self.Times generation
+        # Times set
         # =======================================================================
-        self.Time               = []
-        self.n                  = n
+
+        # #1# origin problem instance (not completed)
+        self.Time                           = []
+        self.n                              = n
+        self.LowBound                       = 0.0
+        self.StatIndicators                 = []
+        self.Results                        = []
+        self.BestResult_Makespan            = 0.0
+        self.BestResult_MakespanAlgorithm   = ""
+        self.BestResult_Time                = 0.0
+        self.BestResult_TimeAlgorithm       = ""
+
+        # completed problem instance (with m-1 tasks completion)
+        self.m1Times                        = []
+        self.m1_n                           = 0
+        self.m1LowBound                     = 0.0
+        self.m1StatIndicators               = []
+        self.m1Optimal                      = 0.0
+        self.m1Results                      = []
+        self.m1BestResult_Makespan          = 0.0
+        self.m1BestResult_MakespanAlgorithm = ""
+        self.m1BestResult_Time              = 0.0
+        self.m1BestResult_TimeAlgorithm     = ""
 
         #-------------------------------------------------------
         # use of pseudo-random number generator
@@ -170,23 +154,19 @@ class PTimes:
         if (self.generateMethode == "UNIFORM"):
             # UNIFORM P: 
             self.Times = uniform_p(n,self.seed, a,b)
-            
-        
         elif (self.generateMethode == "NON_UNIFORM"):
             # NON_UNIFORM P:
             self.Times  = non_uniform_p(n,self.seed,a, b)
-            
         elif (self.generateMethode == "GAMMA"):
             # GAMMA P: problem not considered at this time.
             self.Times  = gamma_p(n,self.seed,alpha, beta)
-        
         elif (self.generateMethode == "BETA"):
             # BETA P:
             self.Times  = beta_p(n,self.seed,alpha)
-        
         elif (self.generateMethode == "EXPONENTIAL"):
             # EXPONENTIAL P: 
             self.Times  = exponential_p(n,self.seed,lambd)
+        # END IF    
 
         #-------------------------------------------------------
         # Use of a reel case
@@ -348,6 +328,50 @@ class PTimes:
         
         #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
         return res
+
+    # ============================================================================
+    #  getResultForCSV
+    #  constructs one list item per algorithm result, and per list type (native or completed)
+    # ============================================================================
+    def getResultForCSV(self):
+        listReturn = []
+        oriRes = [self.generateMethode, self.m, self.seed, self.n, self.LowBound, self.m1_n, self.m1LowBound, self.m1Optimal]
+        
+        #----------------------------------------
+        # Results and m1Results lists structures
+        # [
+        # [...... RESULTS,   ALGORITHM1, computed makespan, computation time, resultMatrix[]
+        # [...... M1RESULTS, ALGORITHMp, computed makespan, computation time, resultMatrix[]
+        # ]
+        #----------------------------------------
+        for k in range(len(self.Results)):
+            res = oriRes[:]
+            res.append("Results")
+            
+            sc = self.Results[k].getResult()    # self.Results[k] = sched object
+            for i in range(len(sc)):
+                res.append(sc[i])
+            # END FOR
+            listReturn.append(res)
+        # END FOR
+
+        for k in range(len(self.m1Results)):
+            res = oriRes[:]
+            res.append("m1Results")
+            sc = self.m1Results[k].getResult()  # self.m1Results[k].getResult() = sched object
+            for i in range(len(sc)):
+                res.append(sc[i])
+            # END FOR
+            listReturn.append(res)
+        # END FOR
+        
+        #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
+        return listReturn
+
+
+
+
+
         
     # ============================================================================
     #  getResultDetailed 
@@ -508,7 +532,6 @@ def getStatIndicators(l, m):
     Return a tuple with followings values
       meanPerMachine, Work_Time, mean (Arithmetical), mean (Geometric); mean (harmonic); median; mode, minimum, maximum, standard_deviation, variance
     """
-    
     # ----------------------------------------------------------
     # mu
     # to call it one time (used in mean, pstdev and pvariance)

@@ -35,6 +35,7 @@ URL_CATALOG_PWA = "https://www.cs.huji.ac.il/labs/parallel/workload/logs-list"
 ####################################################################
 def sepDir():
     """
+    Directory separator
     return "/" if OS_Name = "LINUX
     return "\" else
     """
