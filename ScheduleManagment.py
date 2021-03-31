@@ -367,7 +367,11 @@ class PSched:
         return [self.algoName, self.timeExpected, self.makespan, self.time]
         #return self.algoName, self.timeExpected, self.makespan, self.time
 
-
+    # =============================================
+    # SET  
+    # =============================================
+    def setAlgoName(self, a):
+        self.algoName = a
 
 
 

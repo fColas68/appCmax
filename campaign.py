@@ -8,7 +8,6 @@ import ScheduleManagment as sm
 import pwa               as pwa
 import setup             as s
 
-
 class Campaign():
 
     # #######################################################################
@@ -21,6 +20,7 @@ class Campaign():
         self.campaignName        = campaignName
         self.campaignDate        = time.strftime("%d%m%Y")  
         self.campaignUser        = campaignUser
+        self.compainCompleteName = s.campaignFileResultName(self.campaignName,self.campaignUser,self.campaignDate)
         #---------------------------------------------------------------
         self.N_NumberBegin        = N_NumberBegin
         self.N_NumberEnd          = N_NumberEnd
@@ -137,7 +137,7 @@ class Campaign():
 
         # target file
         resDir = s.folder(s.FOLDER_RESULTS)
-        filename = resDir + s.sepDir()+ self.campaignName+".csv"
+        filename = resDir + s.sepDir()+ self.compainCompleteName+".csv"
         print("Exporting campaign to %s . please wait..." % (filename))
         #
         # collumns = ""

@@ -31,7 +31,7 @@ Algorithm || implementation
 LPT | : | functional
 SLACK | : | functional
 LDM | : | functional
-COMBINE | : | **in progress**
+COMBINE | : | functional
 ||
 ||
 
@@ -48,8 +48,8 @@ Parallel Workload Archive | : | functional | no
 
 Module || implementation
 :----- | ----- | :-----
-result csv file export  | : | **in progress**
-results statistics gui | : | **not started**
+result csv file export  | : | functional
+results statistics gui | : | **in progress**
 
 ## Technologies
 ***
@@ -74,7 +74,7 @@ $ sudo apt-get install python3
 
 ```
 $ 
-$ git clone 
+$ git clone https://github.com/fcolasCTU/appCmax.git
 $ cd ../path/
 ```
 

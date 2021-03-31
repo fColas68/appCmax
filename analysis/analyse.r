@@ -1,8 +1,8 @@
 #------------------------------------------------
 # Reading file
 #------------------------------------------------
-f <- "../results/pp2.csv"
-#f <- file.choose(new = FALSE) #"../results/pp.csv"
+#f <- "../results/pp2.csv"
+f <- file.choose(new = FALSE) #"../results/pp.csv"
 data <- read.csv(file = f, header = FALSE)
 
 #------------------------------------------------

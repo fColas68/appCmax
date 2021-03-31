@@ -114,17 +114,22 @@ def pwaFileRead(fileName):
 # ##################################################################
 # pwaFileChoice():
 # ##################################################################
-def pwaFileChoice():
+def pwaFileChoice(chooseMode = None):
     """
     finds the files contained in the "FOLDER_PWA" directory,
     and proposes to choose them, or not (for test instance creation).
+    :Param chooseMode : None Asc for use the current files / 1 Always answer YES, 0 Always answer NO, 
     Returns the list of selected files as a list files[]
     """
     files = []
     logDir = s.folder(s.FOLDER_PWA)
     content = os.listdir(logDir)
     for item in content:
-        r = int(input("Use this file %s ? (1 yes 0 no) : " % (item)))
+        if chooseMode == None:
+            r = int(input("Use this file %s ? (1 yes 0 no) : " % (item)))
+        else:
+            r=chooseMode
+        # END IF    
         if r == 1:
             files.append(logDir+s.sepDir()+item)
         # END IF

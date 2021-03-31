@@ -344,6 +344,7 @@ def ldm(costMatrix, m):
 def combine(costMatrix, m, alpha = 0.005):
     print("Begin COMBINE Number of machines :",m)
     algoName = "COMBINE"
+    timeExpected = 0.0
 
     #------------------------------------------    
     # work with a copy of costMatrix
@@ -371,15 +372,31 @@ def combine(costMatrix, m, alpha = 0.005):
     M          = PSchedLPT.getMakespan()
 
     if M >= 1.5 * A:
+        PSchedLPT.setAlgoName(algoName) # should be corrected, as it was LPT that gave the answer
         return PSchedLPT
     else:
         upperBound = M                                             # LPT result
-        lowerBound = max(1, matrixW[0], (M / (4/3 - 1 / (3-m) )))  # for m <> 3
-
-        while upperBound - lowerBound > alpha:
-            n,sched = ffd(matrixW, M)
+        lowerBound = max(1, matrixW[0], (M / (4/3 - 1 / (3*m) )))  #
         
+        cu = upperBound
+        cl = lowerBound
+        while cu - cl > alpha * alpha:
+            c = (cu + cl)/2
+            mFFD, sched = ffd(matrixW, c)
+            if mFFD <= m:
+                cu = c
+                #cl = cl
+            else:
+                #cu = cu
+                cl = c
+            # END IF
+        # END WHILE
     # END IF
+
+        #------------------------------------------    
+    # current time at the end
+    #------------------------------------------    
+    after = time.time()
 
     #------------------------------------------
     # RETURN Makespan obtained /
@@ -389,7 +406,6 @@ def combine(costMatrix, m, alpha = 0.005):
     timeAlgo = after-before
     res = sm.PSched(algoName, timeExpected, makespan, timeAlgo, sched)
     return res
-
 
 # #######################################################################
 #                                                                       #
@@ -439,5 +455,50 @@ def ffd(sizesList, binSize, sortList = False):
     return binsNumber,ffd
 
 
+# #######################################################################
+#                                                                       #
+#                               MULTIFIT                                #
+#                                                                       #
+#                                                                       #
+# used by COMBINE                                                       #
+# #######################################################################
+def multifit(sizeList, m, k=8):
+    """
+    :param sizeList :
+    :param m        : 
+    :param cLow     :
+    :param cUpper   :
+    :param k        :
+    """
+    print("Begin MULTIFIT Number of machines :",m)
+    algoName = "MULTIFIT"
 
+    cLow    = 0.0
+    cUpper  = 0.0
+    #------------------------------------------    
+    # work with a copy of costMatrix
+    # this matrix will be sorted or modified
+    # sizesList is sorted 
+    #------------------------------------------
+    sizesListW = sizesList[:]
+    i = 1
+    cL = cLow
+    cu = cUpper
 
+    #------------------------------------------    
+    # Binary search
+    #------------------------------------------
+    while i <= k:
+        c = (cu + cl)/2
+        mFFD, packing = ffd(sizesListW, c)
+        if mFFD <= m:
+            cu = c
+            #cl = cl
+        else:
+            ##cu = cu
+            cl = c
+        # END IF
+        i+=1
+    # END WHILE
+    # Return CU, the smallest value of C found for wich FFD(T,C) <= m
+    return cu
