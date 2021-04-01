@@ -357,6 +357,9 @@ class PSched:
     
     def getSched(self):
         return self.sched
+
+    def getResultHeader():
+        return ["algoName", "timeExpected", "makespan", "time"]
     
     def getResult(self):
         """

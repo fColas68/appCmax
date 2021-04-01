@@ -148,14 +148,18 @@ class Campaign():
         # one time for native instance
         # one time for completed m-1 instance
         for k in range(len(self.matricies)):
+            
+            # matricies[k] is a PTimes object
             items = self.matricies[k].getResultForCSV()
             for i in range(len(items)):
                 dataResult.append(items[i])
             # END FOR (for i in range(len(items)):)
+            
         # END FOR (for k in range(len(self.matricies)):)
 
         # EXPORT
-        expResultHead = pd.DataFrame(dataResult) #, collumns)
-        expResultHead.to_csv(filename, index=False, header=False)
+        expResultHeader = cm.PTimes.getResultForCSVHeader()
+        expResult = pd.DataFrame(dataResult) #, collumns)
+        expResult.to_csv(filename, index=False, header=expResultHeader)
         
 

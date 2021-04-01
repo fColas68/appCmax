@@ -1,6 +1,7 @@
-import random              # to use distributions and seed
-import statistics as stat  # to compute arithmaetic mean
-import scipy.stats as sc   # to compute harmonic_mean and geometric_mean
+import random                    # to use distributions and seed
+import statistics        as stat # to compute arithmaetic mean
+import scipy.stats       as sc   # to compute harmonic_mean and geometric_mean
+import ScheduleManagment as sm   # to retrieve PSchedHeader
 
 # tools libraries
 import pwa
@@ -328,6 +329,15 @@ class PTimes:
         
         #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
         return res
+    
+    # ============================================================================
+    #  getResultForCSVHeader
+    # ============================================================================
+    def getResultForCSVHeader():
+        lstHeader       = ["generateMethode", "m", "seed", "n", "LowBound", "m1_n", "m1LowBound", "m1Optimal"]
+        lstSep          = ["resultConcerns"]
+        lstPSchedHeder  = sm.PSched.getResultHeader()
+        return lstHeader + lstSep +lstPSchedHeder
 
     # ============================================================================
     #  getResultForCSV
@@ -367,11 +377,6 @@ class PTimes:
         
         #res = (self.generateMethode, self.n, self.m,self.a, self.b, self.alpha, self.beta, self.lambd, self.fileName, self.seed)
         return listReturn
-
-
-
-
-
         
     # ============================================================================
     #  getResultDetailed 

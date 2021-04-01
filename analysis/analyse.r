@@ -3,7 +3,7 @@
 #------------------------------------------------
 #f <- "../results/pp2.csv"
 f <- file.choose(new = FALSE) #"../results/pp.csv"
-data <- read.csv(file = f, header = FALSE)
+data <- read.csv(file = f, header = TRUE)
 
 #------------------------------------------------
 # Working lists
@@ -15,16 +15,16 @@ lstCOLOR <- c("blue","red","green","yellow","cyan")
 #------------------------------------------------
 # Filter, result with data$V9=="m1Results"
 #------------------------------------------------
-d <- subset(data, data$V9=="m1Results")
+d <- subset(data, data$resultConcerns=="m1Results")
 
 #------------------------------------------------
 # Retrieve algo names list used in this csv file
 #------------------------------------------------
-algorithms <- levels(d$V10)
+algorithms <- levels(d$algoName)
 for (a in 1:length(algorithms)){
-  algo <-subset(d, d$V10==algorithms[a])
-  plot(algo$V6, algo$V12-algo$V8, main = "title", xlab = "jobs number", ylab = "normalized Cmax (C-opt)", type = "o", col = lstCOLOR[a], pch = lstPCH[a], lab = c(10, 5, 0)) 
-  #title(algorithms[a])
+  algo <- subset(d, d$algoName==algorithms[a])
+  
+  plot(algo$n, algo$makespan-algo$m1Optimal, main = "title", xlab = "jobs number", ylab = "normalized Cmax (C-opt)", type = "o", col = lstCOLOR[a], pch = lstPCH[a], lab = c(10, 5, 0)) 
   par(new=T)
 }
 par(new=F)
