@@ -103,7 +103,7 @@ class ParamFile:
                matRealFiles,
                A, B,
                Alpha,Beta,Lmbda,
-               useLPT,useSLACK,useLDM,useCOMBINE):
+               useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT):
                                
         # JSON PARAMETERS FILE      
         self.campaignName = campaignName
@@ -149,9 +149,10 @@ class ParamFile:
         self.fileObj['algorithms'] = []
         self.fileObj['algorithms'].append({
             'useLPT' : useLPT,
-            'useSLACK' : useLPT,
-            'useLDM' : useLPT,
-            'useCOMBINE' : useLPT})
+            'useSLACK' : useSLACK,
+            'useLDM' : useLDM,
+            'useCOMBINE' : useCOMBINE,
+            'useMULTIFIT' : useMULTIFIT,})
         # Save file
         self.save()
 

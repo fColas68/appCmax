@@ -341,7 +341,7 @@ def ldm(costMatrix, m):
 #                               COMBINE                                 #
 # need FFD algorithm                                                    #
 # #######################################################################
-def combine(costMatrix, m, alpha = 0.005):
+def combine(costMatrix, m, alpha = 0.05):
     print("Begin COMBINE Number of machines :",m)
     algoName = "COMBINE"
     timeExpected = 0.0
@@ -370,33 +370,41 @@ def combine(costMatrix, m, alpha = 0.005):
     A          = sum(matrixW)/m
     PSchedLPT  = lpt(matrixW, m)    # is a PSched
     M          = PSchedLPT.getMakespan()
-
+    mFFD = 0
+    
     if M >= 1.5 * A:
         PSchedLPT.setAlgoName(algoName) # should be corrected, as it was LPT that gave the answer
         return PSchedLPT
+        
     else:
         upperBound = M                                             # LPT result
-        lowerBound = max(1, matrixW[0], (M / (4/3 - 1 / (3*m) )))  #
+        lowerBound = max(A, matrixW[0], (M / ( (4/3) - (1 / (3*m) ) )))  #
         
         cu = upperBound
         cl = lowerBound
-        while cu - cl > alpha * alpha:
+        while cu - cl > alpha * A:
             c = (cu + cl)/2
             mFFD, sched = ffd(matrixW, c)
             if mFFD <= m:
                 cu = c
-                #cl = cl
             else:
-                #cu = cu
                 cl = c
             # END IF
         # END WHILE
     # END IF
-
-        #------------------------------------------    
+    
+    #------------------------------------------    
     # current time at the end
     #------------------------------------------    
     after = time.time()
+
+    #------------------------------------------            
+    # Retrieve Makespan (most loaded machine)
+    #------------------------------------------    
+    makespan = 0.0
+    for i in range(len(sched)):
+        makespan = max(makespan, sched[i].jobsTotal)
+
 
     #------------------------------------------
     # RETURN Makespan obtained /
@@ -409,7 +417,7 @@ def combine(costMatrix, m, alpha = 0.005):
 
 # #######################################################################
 #                                                                       #
-#                               FFD                                 #
+#                               FFD                                     #
 #                                                                       #
 # #######################################################################
 def ffd(sizesList, binSize, sortList = False):
@@ -421,14 +429,14 @@ def ffd(sizesList, binSize, sortList = False):
     scanning the bins in the orderB1,···, Bn.If a new bin is used, incrementN.
     Return number of bins used, and the binpacking computed
     """
-    ffd        = []
+    packing    = []
     binsNumber = 0
     
     #------------------------------------------    
     # work with a copy of costMatrix
     # this matrix will be sorted or modified
     #------------------------------------------
-    sizesListW = sizesList[:] # sizesListW = tools.matrix1dCopy(sizesList)
+    sizesListW = sizesList[:] 
     if sortList==True:
         # the list is already sorted (if sortList=false)
         sizesListW.sort(reverse = True)
@@ -440,19 +448,19 @@ def ffd(sizesList, binSize, sortList = False):
         if binsNumber == 0:
             binsNumber+=1
             p = sm.Processor()
-            ffd.append(p)
+            packing.append(p)
         # END IF
         
         # if bin loaded + new size > binSize
         # Must create a new bin
-        if ffd[binsNumber-1].getTotal() + sizesListW[i] > binSize:
+        if packing[binsNumber-1].getTotal() + sizesListW[i] > binSize:
             binsNumber+=1
             p = sm.Processor()
-            ffd.append(p)
+            packing.append(p)
         # END IF
-        ffd[binsNumber-1].addJob(sizesListW[i])
+        packing[binsNumber-1].addJob(sizesListW[i])
     # END FOR
-    return binsNumber,ffd
+    return binsNumber,packing
 
 
 # #######################################################################
@@ -472,18 +480,24 @@ def multifit(sizeList, m, k=8):
     """
     print("Begin MULTIFIT Number of machines :",m)
     algoName = "MULTIFIT"
+    timeExpected = 0.0
 
-    cLow    = 0.0
-    cUpper  = 0.0
+    #------------------------------------------    
+    # current time at the bégining
+    #------------------------------------------    
+    before = time.time()
+
     #------------------------------------------    
     # work with a copy of costMatrix
     # this matrix will be sorted or modified
     # sizesList is sorted 
     #------------------------------------------
-    sizesListW = sizesList[:]
+    sizesListW = sizeList[:]
     i = 1
-    cL = cLow
-    cu = cUpper
+
+    A  = sum(sizesListW)/m
+    cl = max(sizesListW[0], A)
+    cu = max(sizesListW[0], 2*A)
 
     #------------------------------------------    
     # Binary search
@@ -500,5 +514,26 @@ def multifit(sizeList, m, k=8):
         # END IF
         i+=1
     # END WHILE
-    # Return CU, the smallest value of C found for wich FFD(T,C) <= m
-    return cu
+
+    #------------------------------------------    
+    # current time at the end
+    #------------------------------------------    
+    after = time.time()
+
+    #------------------------------------------            
+    # Retrieve Makespan (most loaded machine)
+    #------------------------------------------    
+    makespan = 0.0
+    sched = packing[:]
+    for i in range(len(sched)):
+        makespan = max(makespan, sched[i].jobsTotal)
+
+
+    #------------------------------------------
+    # RETURN Makespan obtained /
+    #        Processing algorithm time /
+    #        Schedul 
+    #------------------------------------------
+    timeAlgo = after-before
+    res = sm.PSched(algoName, timeExpected, makespan, timeAlgo, sched)
+    return res

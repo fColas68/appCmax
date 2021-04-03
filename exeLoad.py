@@ -61,6 +61,7 @@ def main():
     useSLACK            = d["useSLACK"]
     useLDM              = d["useLDM"]
     useCOMBINE          = d["useCOMBINE"]
+    useMULTIFIT         = d["useMULTIFIT"]
 
     # #######################################################################
     #                                                                       #
@@ -78,7 +79,7 @@ def main():
                      matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
                      matRealFiles,
                      nAb, nBb,nAlpah,nBeta,nLambda,
-                     useLPT,useSLACK,useLDM,useCOMBINE)
+                     useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
 
     print("===============================================================")
     print("Results computation                                            ")
@@ -89,6 +90,7 @@ def main():
     if useSLACK==1: c.runAlgorithm(cmm.slack)
     if useLDM==1: c.runAlgorithm(cmm.ldm)
     if useCOMBINE==1: c.runAlgorithm(cmm.combine)
+    if useMULTIFIT==1: c.runAlgorithm(cmm.multifit)
     #
     c.exportCSV()
 

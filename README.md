@@ -56,8 +56,20 @@ results statistics gui | : | **in progress**
 (in progress)  
 A list of technologies used within the project:
 * [Python](https://www.python.org/): Version 3.4 
-* [pandas library](https://pandas.pydata.org/): Version 0.14.1-2
-* [rStudio](https://rstudio.com/solutions/r-and-python/): Version xxx
+	+ runtime  
+		- to install  
+	+ used libraries  (stats, numpy, random, os, path)
+		- to install   
+	+ [pandas library](https://pandas.pydata.org/): Version 0.14.1-2
+		- to install  
+
+* [rStudio](https://rstudio.com/solutions/r-and-python/): Version 1.1.463
+	+ R(r-base and r-base-dev)  Version 3.5.3 (2019-03-11)
+		- to install  
+	
+	+ ggplot2 (RStudio version must be 3.5 or higher)  
+		- to install  
+
 ## Installation
 ***
 (in progress)  
@@ -65,17 +77,23 @@ The project is composed of PYTHON scripts. You just have to install them from gi
 The installation procedure is given for a Linux environment using the APT package manager. you will have to adapt the installation commands to the target environment. And also, the paths and directories used must be modified if the scripts are executed under windows (replace the / characters in \\). see below.  
 
 * installing the required modules
-
+installing git
+```
+$ sudo apt-get update
+$ sudo apt-get install git
+```
+installing python3
 ```
 $ sudo apt-get install python3
 ```
 
-* get the script from github
+* get the scripts from github
 
+in a linux console
+from the local home directory (/home/xxxx)
 ```
-$ 
 $ git clone https://github.com/fcolasCTU/appCmax.git
-$ cd ../path/
+$ cd appCmax
 ```
 
 * adapt directory management to windows

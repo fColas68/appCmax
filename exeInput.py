@@ -92,11 +92,11 @@ def main():
     print("===============================================================")
     print("Algorithms                                                     ")
     print("===============================================================")
-    useLPT     = int(input("Use LPT rule ? : (1 yes, 0 no) : "))
-    useSLACK   = int(input("UParamFilese Slack    ? : (1 yes, 0 no) : "))
-    useLDM     = int(input("Use LDM      ? : (1 yes, 0 no) : "))
-    useCOMBINE = int(input("Use COMBINE  ? : (1 yes, 0 no) : "))
-
+    useLPT      = int(input("Use LPT rule ? : (1 yes, 0 no) : "))
+    useSLACK    = int(input("UParamFilese Slack    ? : (1 yes, 0 no) : "))
+    useLDM      = int(input("Use LDM      ? : (1 yes, 0 no) : "))
+    useCOMBINE  = int(input("Use COMBINE  ? : (1 yes, 0 no) : "))
+    useMULTIFIT = int(input("Use MULTIFIT  ? : (1 yes, 0 no) : "))
     #======================================================================
     # Parameters file (json)
     #======================================================================
@@ -106,7 +106,7 @@ def main():
                      matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
                      matRealFiles,
                      nAb, nBb,nAlpah,nBeta,nLambda,
-                     useLPT,useSLACK,useLDM,useCOMBINE)
+                     useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
 
     print("===============================================================")
     print("Results computation                                            ")
@@ -117,6 +117,7 @@ def main():
     if useSLACK==1: c.runAlgorithm(cmm.slack)
     if useLDM==1: c.runAlgorithm(cmm.ldm)
     if useCOMBINE==1: c.runAlgorithm(cmm.combine)
+    if useMULTIFIT==1: c.runAlgorithm(cmm.multifit)
     #
     c.exportCSV()
 

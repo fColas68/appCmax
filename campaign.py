@@ -126,6 +126,7 @@ class Campaign():
             
             # work with PTimes.m1Times list
             rm1 = algo(self.matricies[k].m1Times, self.matricies[k].m)
+            print(rm1)
             self.matricies[k].addM1Sched(rm1)
             print("Expected optimal :",self.matricies[k].m1Optimal,", Obtained :",rm1.getMakespan(), ", Time:", rm1.getTime())
         # END FOR    
