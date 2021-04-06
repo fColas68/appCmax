@@ -27,18 +27,19 @@ def lpt(costMatrix, m):
     """
     
     print("Begin LPT Number of machines :",m)
-
-    #------------------------------------------
-    #
-    #------------------------------------------
     algoName = "LPT"
-    timeExpected = 0.0
 
     #------------------------------------------    
     # work with a copy of costMatrix
     # this matrix will be sorted or modified
     #------------------------------------------    
     matrixW = costMatrix[:] # tools.matrix1dCopy(costMatrix)
+
+    #------------------------------------------    
+    # Time expected, according time complexity 
+    #------------------------------------------
+    n = len(matrixW)
+    timeExpected = n * math.log(n) + n * math.log(m)
 
     #------------------------------------------    
     # sched is a list of Processor objects.
@@ -62,7 +63,7 @@ def lpt(costMatrix, m):
     #==========================================    
     # Sched calculation
     #==========================================    
-    for i in range(len(matrixW)):
+    for i in range(n):
         #------------------------------------------    
         # The maximum number of processors (or machines) is not reached.
         # One more processor is added for each iteration.
@@ -344,14 +345,12 @@ def ldm(costMatrix, m):
 def combine(costMatrix, m, alpha = 0.05):
     print("Begin COMBINE Number of machines :",m)
     algoName = "COMBINE"
-    timeExpected = 0.0
 
     #------------------------------------------    
     # work with a copy of costMatrix
     # this matrix will be sorted or modified
     #------------------------------------------
     matrixW = costMatrix[:] # matrixW = tools.matrix1dCopy(costMatrix)
-    matrixW.sort(reverse=True)
     
     #------------------------------------------    
     # sched is a list of Processor objects.
@@ -363,33 +362,65 @@ def combine(costMatrix, m, alpha = 0.05):
     # current time at the bégining
     #------------------------------------------    
     before = time.time()
-
+    matrixW.sort(reverse=True)
+    
     #------------------------------------------    
     # Bounds for binary search
     #------------------------------------------
+    i          = 0
+    iMax       = 200
+    #
+    n          = len(matrixW)
     A          = sum(matrixW)/m
     PSchedLPT  = lpt(matrixW, m)    # is a PSched
     M          = PSchedLPT.getMakespan()
+    Mm         = (M / ( (4/3) - (1 / (3*m) ) ))
+    p1         = matrixW[0]
     mFFD = 0
     
     if M >= 1.5 * A:
+        i = 1                           # log(i) below
         PSchedLPT.setAlgoName(algoName) # should be corrected, as it was LPT that gave the answer
         return PSchedLPT
         
     else:
-        upperBound = M                                             # LPT result
-        lowerBound = max(A, matrixW[0], (M / ( (4/3) - (1 / (3*m) ) )))  #
+        #------------------------------------------
+        # BOUNDS
+        #------------------------------------------
+        cu = M               # LPT result
+        cl = max(A, p1, Mm)  #
         
-        cu = upperBound
-        cl = lowerBound
-        while cu - cl > alpha * A:
+        #------------------------------------------
+        # while cu - cl > alpha * A:
+        # to force at least once
+        #------------------------------------------
+        while True:
+            i+=1
             c = (cu + cl)/2
-            mFFD, sched = ffd(matrixW, c)
+            mFFD, sched = sm.ffd(matrixW, c)
             if mFFD <= m:
                 cu = c
             else:
                 cl = c
             # END IF
+            
+            #------------------------------------------
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            # * mFFD == m is an additional condition
+            # to force the algorithm to give a good answer.
+            # * i > iMax is an additional condition
+            # to avoid infinite loops
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            #------------------------------------------
+            if ((cu - cl > alpha * A) and (mFFD == m)) or (i>iMax):
+            #if ((cu - cl <= alpha * A)) or (i>iMax):
+                if i > iMax:
+                    algoName = "COMBINE STOPED (binary search)"
+                    print("!!! COMBINE STOPED (BINARY SEARCH) because number of iterations too large !!!", i)
+                # END IF
+                break
+            # END IF
+            
         # END WHILE
     # END IF
     
@@ -399,12 +430,22 @@ def combine(costMatrix, m, alpha = 0.05):
     after = time.time()
 
     #------------------------------------------            
-    # Retrieve Makespan (most loaded machine)
+    # Retrieve Makespan
+    # makespan is not most loaded machine, but cu
+    # see above
     #------------------------------------------    
-    makespan = 0.0
-    for i in range(len(sched)):
-        makespan = max(makespan, sched[i].jobsTotal)
+    #for i in range(len(sched)):
+    #    makespan = max(makespan, sched[i].jobsTotal)
+    #------------------------------------------            
+    # makespan = cu (by combine definition)
+    #------------------------------------------    
+    makespan = cu
 
+
+    #------------------------------------------    
+    # the expected time is also relative to i
+    #------------------------------------------    
+    timeExpected = (n * math.log(n)) + (i * n * math.log(m))
 
     #------------------------------------------
     # RETURN Makespan obtained /
@@ -414,54 +455,6 @@ def combine(costMatrix, m, alpha = 0.05):
     timeAlgo = after-before
     res = sm.PSched(algoName, timeExpected, makespan, timeAlgo, sched)
     return res
-
-# #######################################################################
-#                                                                       #
-#                               FFD                                     #
-#                                                                       #
-# #######################################################################
-def ffd(sizesList, binSize, sortList = False):
-    """
-    order the given objects in a non-decreasing order
-    so that wehaves1≥···≥sn. Initialize a counterN= 0.2.
-    Let the bins beB1,···, Bn.
-    Put the next (first) object in thefirst “possible” bin ,
-    scanning the bins in the orderB1,···, Bn.If a new bin is used, incrementN.
-    Return number of bins used, and the binpacking computed
-    """
-    packing    = []
-    binsNumber = 0
-    
-    #------------------------------------------    
-    # work with a copy of costMatrix
-    # this matrix will be sorted or modified
-    #------------------------------------------
-    sizesListW = sizesList[:] 
-    if sortList==True:
-        # the list is already sorted (if sortList=false)
-        sizesListW.sort(reverse = True)
-    # END IF    
-
-    # FIRST FIT DECREASING 
-    for i in range(len(sizesListW)):
-        # Create first bin
-        if binsNumber == 0:
-            binsNumber+=1
-            p = sm.Processor()
-            packing.append(p)
-        # END IF
-        
-        # if bin loaded + new size > binSize
-        # Must create a new bin
-        if packing[binsNumber-1].getTotal() + sizesListW[i] > binSize:
-            binsNumber+=1
-            p = sm.Processor()
-            packing.append(p)
-        # END IF
-        packing[binsNumber-1].addJob(sizesListW[i])
-    # END FOR
-    return binsNumber,packing
-
 
 # #######################################################################
 #                                                                       #
@@ -483,18 +476,24 @@ def multifit(sizeList, m, k=8):
     timeExpected = 0.0
 
     #------------------------------------------    
-    # current time at the bégining
-    #------------------------------------------    
-    before = time.time()
-
-    #------------------------------------------    
     # work with a copy of costMatrix
     # this matrix will be sorted or modified
     # sizesList is sorted 
     #------------------------------------------
     sizesListW = sizeList[:]
-    i = 1
 
+
+    #------------------------------------------    
+    # current time at the bégining
+    #------------------------------------------    
+    before = time.time()
+
+    sizesListW.sort(reverse=True)
+
+    # iteration binary search (max k, or max iMax)
+    i = 0
+    
+    n = len(sizesListW)
     A  = sum(sizesListW)/m
     cl = max(sizesListW[0], A)
     cu = max(sizesListW[0], 2*A)
@@ -502,17 +501,30 @@ def multifit(sizeList, m, k=8):
     #------------------------------------------    
     # Binary search
     #------------------------------------------
-    while i <= k:
+    iMax = 200
+    while True: #while i <= k:
+        i+=1
         c = (cu + cl)/2
-        mFFD, packing = ffd(sizesListW, c)
+        mFFD, packing = sm.ffd(sizesListW, c)
         if mFFD <= m:
             cu = c
-            #cl = cl
         else:
-            ##cu = cu
             cl = c
         # END IF
-        i+=1
+
+        #------------------------------------------
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # * mFFD == m is an additional condition
+        # to force the algorithm to give a good answer.
+        # * i > iMax is an additional condition
+        # to avoid infinite loops
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        #------------------------------------------
+        if (i >= k and mFFD == m) or (i > iMax):
+            if i > iMax:
+                algoName = "MULTIFIT STOPED (binary search)"
+                print("!!! MULTIFIT STOPED (BINARY SEARCH) because number of iterations too large !!!", i)
+            break
     # END WHILE
 
     #------------------------------------------    
@@ -521,13 +533,24 @@ def multifit(sizeList, m, k=8):
     after = time.time()
 
     #------------------------------------------            
-    # Retrieve Makespan (most loaded machine)
+    # Retrieve Makespan
+    # makespan = cu (by multifit definition)
     #------------------------------------------    
-    makespan = 0.0
+    makespan = cu
     sched = packing[:]
-    for i in range(len(sched)):
-        makespan = max(makespan, sched[i].jobsTotal)
 
+    #------------------------------------------            
+    # Retrieve Makespan
+    # makespan is not most loaded machine, but cu
+    # see above
+    #------------------------------------------    
+    #for i in range(len(sched)):
+    #    makespan = max(makespan, sched[i].jobsTotal)
+
+    #------------------------------------------    
+    # the expected time is also relative to i
+    #------------------------------------------    
+    timeExpected = (n * math.log(n)) + (i * n * math.log(m))
 
     #------------------------------------------
     # RETURN Makespan obtained /

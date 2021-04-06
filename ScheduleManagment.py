@@ -376,16 +376,104 @@ class PSched:
     def setAlgoName(self, a):
         self.algoName = a
 
-
-
-
-
-
-
-
-
-# rec = lambda x: sum(map(rec, x)) if isinstance(x, list) else x
-        
-
-
+# #######################################################################
+#                                                                       #
+#                               FFD2                                     #
+# !!! doesn't work !!!                                                    #
+# #######################################################################
+def ffd2(sizesList, binSize, sortList = False):
+    """
+    order the given objects in a non-decreasing order
+    so that wehaves1≥···≥sn. Initialize a counterN= 0.2.
+    Let the bins beB1,···, Bn.
+    Put the next (first) object in thefirst “possible” bin ,
+    scanning the bins in the orderB1,···, Bn.If a new bin is used, incrementN.
+    Return number of bins used, and the binpacking computed
+    """
+    packing    = []
+    binsNumber = 0
     
+    #------------------------------------------    
+    # work with a copy of costMatrix
+    # this matrix will be sorted or modified
+    #------------------------------------------
+    sizesListW = sizesList[:] 
+    if sortList==True:
+        # the list is already sorted (if sortList=false)
+        sizesListW.sort(reverse = True)
+    # END IF    
+
+    # FIRST FIT DECREASING 
+    for i in range(len(sizesListW)):
+        # Create first bin
+        if binsNumber == 0:
+            binsNumber+=1
+            p = Processor()
+            packing.append(p)
+        # END IF
+        
+        # if bin loaded + new size > binSize
+        # Must create a new bin
+        if packing[binsNumber-1].getTotal() + sizesListW[i] > binSize:
+            binsNumber+=1
+            p = Processor()
+            packing.append(p)
+        # END IF
+        packing[binsNumber-1].addJob(sizesListW[i])
+    # END FOR
+    print("FFD==>",binsNumber)
+    return binsNumber,packing
+
+# #######################################################################
+#                                                                       #
+#                               FFD                                     #
+#                                                                       #
+# #######################################################################
+def ffd(sizesList, binSize):
+    """
+    order the given objects in a non-decreasing order
+    so that wehaves1≥···≥sn. Initialize a counterN= 0.2.
+    Let the bins beB1,···, Bn.
+    Put the next (first) object in thefirst “possible” bin ,
+    scanning the bins in the orderB1,···, Bn.If a new bin is used, incrementN.
+    Return number of bins used, and the binpacking computed
+    """
+    #------------------------------------------    
+    # work with a copy of costMatrix
+    # this matrix will be sorted or modified
+    # Sort the list (decreasing)
+    #------------------------------------------
+    sizesListW = sizesList[:] 
+    sizesListW.sort(reverse = True)
+
+    packing    = []
+    binsNumber = 0
+    
+    # FIRST FIT DECREASING 
+    for i in range(len(sizesListW)):
+        objPacked = False
+        for j in range(len(packing)):
+            if packing[j].getTotal() + sizesListW[i] <= binSize:
+                packing[j].addJob(sizesListW[i])
+                objPacked = True
+                break
+            # END IF
+        # END FOR
+        if objPacked == False:
+            binsNumber+=1
+            p = Processor()
+            packing.append(p)
+            packing[binsNumber-1].addJob(sizesListW[i])
+        # END IF
+    # END FOR
+##    print("Liste en entree")
+##    print(sizesListW)
+##    print("Packing")
+##    print(binSize)
+##    for i in range(len(packing)):
+##        print("")
+##        print(packing[i].getTotal())
+##        print(packing[i].jobsSet)
+##    input("haha")    
+    
+    return binsNumber,packing

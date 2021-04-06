@@ -18,24 +18,24 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "testParam2"      # string
+    campaignName         = "testParam4"     # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
     seedForce            = None             # integer
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
-    N_NumberBegin        = 10               # int
-    N_NumberEnd          = 40               # int 
+    N_NumberBegin        = 50               # int
+    N_NumberEnd          = 100               # int 
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
-    M_NumberBegin        = 3                # int
-    M_NumberEnd          = 3                # int
+    M_NumberBegin        = 4                # int
+    M_NumberEnd          = 4                # int
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 1                 # int
+    matUniformNumber    = 0                 # int
     matNonUniformNumber = 0                 # int 
-    matGammaNumber      = 0                 # int
+    matGammaNumber      = 1                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
 
@@ -52,7 +52,7 @@ def main():
     nBeta               = 1.0               # float
     nLambda             = 1.0               # float
 
-    #Algorithms ==========================================================
+      #Algorithms ==========================================================
     useLPT              = 1                 # 1 or 0
     useSLACK            = 1                 # 1 or 0
     useLDM              = 1                 # 1 or 0
