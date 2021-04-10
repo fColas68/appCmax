@@ -8,35 +8,33 @@ library(ggplot2)
 f <- file.choose(new = FALSE)
 data <- read.csv(file = f, header = TRUE)
 
-#------------------------------------------------
-# Filter, result with data$V9=="m1Results"
-#------------------------------------------------
-#d <- subset(data, data$resultConcerns=="m1Results")
-
-#------------------------------------------------
-# Factor management (for series)
-#------------------------------------------------
-d$algorithm = as.factor(d$algoName)
+d <- filter(data, data$resultConcerns=="m1Results")
 
 #------------------------------------------------
 # Draw the graph
 #------------------------------------------------
-
 d %>%
-  filter(resultConcerns=="m1Results") %>%
-  ggplot(aes(x = n, y = (makespan/m1Optimal), color=algorithm, shape=algorithm))+
+  # filter(resultConcerns=="m1Results") %>%
+  ggplot(aes(x = n, y = (makespan/m1Optimal), color=algoName, shape=algoName))+
   #ggplot(aes(x = n, y = (makespan), color=algorithm, shape=algorithm))+
   geom_point()+
-  geom_smooth(method=loess, se=FALSE)+
-  #geom_smooth(method=lm)+
+  # geom_smooth(formula = y ~ x,  method=loess, se=FALSE)+
+  # geom_smooth(formula = y ~ x, method=lm)+
   # geom_line() + 
+  facet_grid(d$m ~ d$generateMethode)
   labs(
     title = "Comparaison",
     y = "Makespan normalisé Cmax-optimal"
   )
 
 
-
-# keep it for later 
-#pdw <- getwd()
-#setwd("..//results") 
+  #------------------------------------------------
+  # Filter, result with data$V9=="m1Results"
+  #------------------------------------------------
+  #d <- subset(data, data$resultConcerns=="m1Results")
+  #------------------------------------------------
+  # Factor management (for series)
+  #------------------------------------------------
+  # d$algorithm = as.factor(d$algoName)
+  
+  

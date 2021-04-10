@@ -18,24 +18,24 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "testParam4"     # string
+    campaignName         = "testCombine"     # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
     seedForce            = None             # integer
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
-    N_NumberBegin        = 50               # int
-    N_NumberEnd          = 100               # int 
+    N_NumberBegin        = 10               # int
+    N_NumberEnd          = 10               # int 
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
-    M_NumberBegin        = 4                # int
-    M_NumberEnd          = 4                # int
+    M_NumberBegin        = 3                # int
+    M_NumberEnd          = 3                # int
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 0                 # int
+    matUniformNumber    = 50                 # int
     matNonUniformNumber = 0                 # int 
-    matGammaNumber      = 1                 # int
+    matGammaNumber      = 0                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
 
@@ -53,10 +53,10 @@ def main():
     nLambda             = 1.0               # float
 
       #Algorithms ==========================================================
-    useLPT              = 1                 # 1 or 0
-    useSLACK            = 1                 # 1 or 0
-    useLDM              = 1                 # 1 or 0
-    useCOMBINE          = 0                 # 1 or 0
+    useLPT              = 0                 # 1 or 0
+    useSLACK            = 0                 # 1 or 0
+    useLDM              = 0                 # 1 or 0
+    useCOMBINE          = 1                 # 1 or 0
     useMULTIFIT         = 0                 # 1 or 0
 
     # #######################################################################

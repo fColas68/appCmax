@@ -3,7 +3,7 @@ import math
 from operator import attrgetter
 #
 import matrix as cm
-import ScheduleManagment as sm # Processor object
+import ScheduleManagment as sm # Processor object / PSched object / algorithms tools
 
 
 # #######################################################################
@@ -342,7 +342,10 @@ def ldm(costMatrix, m):
 #                               COMBINE                                 #
 # need FFD algorithm                                                    #
 # #######################################################################
-def combine(costMatrix, m, alpha = 0.05):
+def combine(costMatrix, m, alpha = 0.005):
+    """
+    alpha = 0.005 
+    """
     print("Begin COMBINE Number of machines :",m)
     algoName = "COMBINE"
 
@@ -379,22 +382,44 @@ def combine(costMatrix, m, alpha = 0.05):
     mFFD = 0
     
     if M >= 1.5 * A:
-        i = 1                           # log(i) below
+        #==========================================
+        # LPT part.
+        #==========================================
+
+        # i = 1                         # useless : LPT return result (TimeExpected to) i <> 0 if a log(i) used. 
         PSchedLPT.setAlgoName(algoName) # should be corrected, as it was LPT that gave the answer
         return PSchedLPT
-        
+    
     else:
+        #==========================================
+        # MULTIFIT part.
+        # with bounds as follow Ub = Cmax(LPT)
+        #                       Lb = max(A, p1, Mm)
+        # Stopping condition    when Ub - Lb <= alpha . A
+        #==========================================
+
         #------------------------------------------
         # BOUNDS
         #------------------------------------------
         cu = M               # LPT result
         cl = max(A, p1, Mm)  #
-        
+
+        # dirty fiddling ! just for test 
+        mFFDU, sched = sm.ffd(matrixW, cu)
+        if mFFDU > m: cu = 1.1*M
+        # dirty fiddling ! just for test 
+         
         #------------------------------------------
+        # MULTIFIT part. 
         # while cu - cl > alpha * A:
         # to force at least once
         #------------------------------------------
         while True:
+
+            mFFDL, sched = sm.ffd(matrixW, cl)
+            print("=====> ", mFFDU, cu, mFFDL)
+
+                            
             i+=1
             c = (cu + cl)/2
             mFFD, sched = sm.ffd(matrixW, c)
@@ -412,7 +437,7 @@ def combine(costMatrix, m, alpha = 0.05):
             # to avoid infinite loops
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             #------------------------------------------
-            if ((cu - cl > alpha * A) and (mFFD == m)) or (i>iMax):
+            if ((cu - cl <= alpha * A) and (mFFD == m)) or (i>iMax):
             #if ((cu - cl <= alpha * A)) or (i>iMax):
                 if i > iMax:
                     algoName = "COMBINE STOPED (binary search)"
