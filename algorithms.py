@@ -404,10 +404,10 @@ def combine(costMatrix, m, alpha = 0.005):
         cu = M               # LPT result
         cl = max(A, p1, Mm)  #
 
-        # dirty fiddling ! just for test 
-        mFFDU, sched = sm.ffd(matrixW, cu)
-        if mFFDU > m: cu = 1.1*M
-        # dirty fiddling ! just for test 
+        # --> Just for occasionnal tests 
+        # mFFDU, sched = sm.ffd(matrixW, cu)
+        # if mFFDU > m: cu = 1.1*M
+        
          
         #------------------------------------------
         # MULTIFIT part. 
@@ -416,8 +416,9 @@ def combine(costMatrix, m, alpha = 0.005):
         #------------------------------------------
         while True:
 
-            mFFDL, sched = sm.ffd(matrixW, cl)
-            print("=====> ", mFFDU, cu, mFFDL)
+            # --> Just for occasionnal tests 
+            #mFFDL, sched = sm.ffd(matrixW, cl)
+            #print("=====> ", mFFDU, cu, mFFDL)
 
                             
             i+=1
@@ -428,7 +429,9 @@ def combine(costMatrix, m, alpha = 0.005):
             else:
                 cl = c
             # END IF
-            
+
+            #------------------------------------------
+            # --> Just for occasionnal tests 
             #------------------------------------------
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             # * mFFD == m is an additional condition
@@ -436,13 +439,20 @@ def combine(costMatrix, m, alpha = 0.005):
             # * i > iMax is an additional condition
             # to avoid infinite loops
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            #------------------------------------------
-            if ((cu - cl <= alpha * A) and (mFFD == m)) or (i>iMax):
+            # if ((cu - cl <= alpha * A) and (mFFD == m)) or (i>iMax):
             #if ((cu - cl <= alpha * A)) or (i>iMax):
+            #------------------------------------------
+
+            #------------------------------------------
+            # by combine definition (cu - cl) <= (alpha * A)
+            #------------------------------------------
+            if (cu - cl) <= (alpha * A):
                 if i > iMax:
                     algoName = "COMBINE STOPED (binary search)"
                     print("!!! COMBINE STOPED (BINARY SEARCH) because number of iterations too large !!!", i)
                 # END IF
+                
+                # stop the binary search
                 break
             # END IF
             

@@ -69,6 +69,11 @@ def folder(f):
     # END IF
     return resFolder
 
+def folderResult(name, user, date):
+    folder(FOLDER_RESULTS)
+    r = folder(FOLDER_RESULTS+ sepDir() + name+"_"+user+"_"+date)
+    return r
+
 def campaignFileResultName(name, user, date):
     return name+"_"+user+"_"+date
 
@@ -108,8 +113,10 @@ class ParamFile:
         # JSON PARAMETERS FILE      
         self.campaignName = campaignName
         self.campaignUser = campaignUser
+
         # complete file name
-        self.completeFileName = s.folder(s.FOLDER_RESULTS) + s.sepDir() + campaignFileParametersName(campaignName, campaignUser, self.campaignDate)+".json"
+        resDir = folderResult(self.campaignName, self.campaignUser, self.campaignDate)
+        self.completeFileName = resDir + s.sepDir() + campaignFileParametersName(campaignName, campaignUser, self.campaignDate)+".json"
         # self.fileObj : json content
         #
         self.fileObj['campaign']=[]

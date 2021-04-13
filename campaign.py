@@ -137,7 +137,7 @@ class Campaign():
     def exportCSV(self):
 
         # target file
-        resDir = s.folder(s.FOLDER_RESULTS)
+        resDir = s.folderResult(self.campaignName, self.campaignUser, self.campaignDate)
         filename = resDir + s.sepDir()+ self.compainCompleteName+".csv"
         print("Exporting campaign to %s . please wait..." % (filename))
         #

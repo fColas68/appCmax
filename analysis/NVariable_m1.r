@@ -18,8 +18,8 @@ d %>%
   ggplot(aes(x = n, y = (makespan/m1Optimal), color=algoName, shape=algoName))+
   #ggplot(aes(x = n, y = (makespan), color=algorithm, shape=algorithm))+
   geom_point()+
-  # geom_smooth(formula = y ~ x,  method=loess, se=FALSE)+
-  # geom_smooth(formula = y ~ x, method=lm)+
+  geom_smooth(formula = y ~ x,  method=loess, se=FALSE)+
+  # geom_smooth(formula = y ~ x, method=lm, se=FALSE)+
   # geom_line() + 
   facet_grid(d$m ~ d$generateMethode)
   labs(
