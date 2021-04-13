@@ -61,26 +61,26 @@ List of technologies used within the project:
 
 * first and foremost :
 ```
-$	sudo apt-get update
+$ sudo apt-get update
 ```
 
 * [Python](https://www.python.org/): Version 3.4 
 ```
-$	sudo apt-get install python3.4
-$	sudo apt-get install python3.4-minimal
-$	sudo apt-get install idle-python3.4 
+$ sudo apt-get install python3.4
+$ sudo apt-get install python3.4-minimal
+$ sudo apt-get install idle-python3.4 
 ```
 
 * [pandas library](https://pandas.pydata.org/): Version 0.14.1-2
 ```
-$	+ sudo apt-get install python3-pandas 
-$	+ sudo apt-get install python3-pandas-lib
+$ sudo apt-get install python3-pandas 
+$ sudo apt-get install python3-pandas-lib
 ```
 
 * [R Langage](https://cran.rstudio.com/): 3.5.3.1
 ```
-$	+ sudo apt-get install r-base 
-$	+ sudo apt-get install r-base-dev
+$ sudo apt-get install r-base 
+$ sudo apt-get install r-base-dev
 ```
 
 * [rStudio](https://rstudio.com/solutions/r-and-python/): Version 1.1.463
@@ -100,7 +100,7 @@ $	+ sudo apt-get install r-base-dev
 
  * [git](https://github.com/) to retrieve the project from GitHub
 ```
-$	sudo apt-get install git
+$ sudo apt-get install git
 ```
 
 [^1]: apper must also be installed, or use another installation program  
