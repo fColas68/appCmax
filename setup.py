@@ -31,6 +31,26 @@ FOLDER_PWA       = "logpwa"
 #=========================================
 URL_CATALOG_PWA = "https://www.cs.huji.ac.il/labs/parallel/workload/logs-list"
 
+#=========================================
+# to be exported with the result
+#=========================================
+EXP_INSTANCES = True
+EXP_PARAMETERS = True
+
+#=========================================
+# generate integers rather than reals.
+# arround with round method
+# Used in MATRIX module __init__ method
+# if True, generate a list of integers
+#=========================================
+INT_UNIFORM     = True
+INT_NON_UNIFORM = True
+# not relevant and therefore not managed.
+# INT_LAMBDA      = False
+# INT_BETA        = False
+# INT_EXPONENTIAL = False
+# INT_PWA = False
+
 ####################################################################
 #
 # TOOLS
@@ -184,6 +204,79 @@ class ParamFile:
         # END FOR
         return newDict
         
+    # ==================================================================
+    # SAVE
+    # ==================================================================
+    def save(self):
+        with open(self.completeFileName,'w') as fileJSON:
+            json.dump(self.fileObj, fileJSON)
+
+
+
+
+####################################################################
+#
+# JSON INSTANCE files Management
+#
+####################################################################
+class InstanceFile:
+    # ==================================================================
+    # CONSTRUCTOR
+    # ==================================================================
+    def __init__(self):
+        # JSON PARAMETERS FILE      
+        # JSON content
+        self.fileObj   = {} 
+
+    # ==================================================================
+    # CREATE
+    # initialize values and JSON? content
+    # save file
+    # ==================================================================
+    def create(self,    campaignName, campaignUser, campaignDate,
+                        generateMethode, seed, realFilesName, a, b, alpha,beta,lmbda, m, n, sType,
+                        matTimes, 
+                        lowBound, matStatIndicators, optimal = None):
+                                       
+        # JSON PARAMETERS FILE      
+
+        # complete file name
+        resDir = folderResult(campaignName, campaignUser, campaignDate)
+        self.completeFileName = resDir + s.sepDir() + "instance_"+sType+"_"+generateMethode+"_"+str(seed)+"_"+str(n)+"_"+str(m)+".json"
+        # self.fileObj : json content
+        #
+        self.fileObj['campaign']=[]
+        self.fileObj['campaign'].append({
+            'campaignName'  : campaignName,
+            'campaignUser'  : campaignUser,
+            'campaignDate'  : campaignDate})
+        #
+        self.fileObj['generation_method']=[]
+        self.fileObj['generation_method'].append({
+            'generateMethode':generateMethode,
+            'n'             : n,
+            'm'             : m,
+            'type'          : sType,
+            'seed'          : seed,
+            'reelFileName'  : realFilesName,
+            'a'             : a,
+            'b'             : b,
+            'alpha'         : alpha,
+            'beta'          : beta,
+            'lambda'        : lmbda})
+        #
+        self.fileObj['features']=[]
+        self.fileObj['features'].append({
+            'lowBound'      : lowBound,
+            'optimal'       : optimal,
+            'indicators'    : matStatIndicators})
+        #
+        self.fileObj['matrix']=[]
+        self.fileObj['matrix'].append({
+            'timeList' : matTimes})
+        # Save file
+        self.save()
+
     # ==================================================================
     # SAVE
     # ==================================================================

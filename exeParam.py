@@ -25,16 +25,16 @@ def main():
     seedForce            = None             # integer
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
-    N_NumberBegin        = 1000               # int
-    N_NumberEnd          = 1100              # int 
+    N_NumberBegin        = 10               # int
+    N_NumberEnd          = 100              # int 
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
-    M_NumberEnd          = 10                # int
+    M_NumberEnd          = 3                # int
 
     # Job set generation methods ===========================================
     matUniformNumber    = 1                 # int
-    matNonUniformNumber = 0                 # int 
+    matNonUniformNumber = 1                 # int 
     matGammaNumber      = 0                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
@@ -46,7 +46,7 @@ def main():
     matRealFiles        = pwa.pwaFileChoice(0)
 
     # Properties of generation ============================================
-    nAb                 = 1.0               # float
+    nAb                 = 1.0                # float
     nBb                 = 100.0             # float
     nAlpah              = 1.0               # float
     nBeta               = 1.0               # float
@@ -69,13 +69,14 @@ def main():
     #======================================================================
     # Parameters file (json)
     #======================================================================
-    fileSetup = s.ParamFile()
-    fileSetup.create(campaignName,campaignUser,
-                     seedForce,N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
-                     matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
-                     matRealFiles,
-                     nAb, nBb,nAlpah,nBeta,nLambda,
-                     useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
+    if s.EXP_PARAMETERS:
+        fileSetup = s.ParamFile()
+        fileSetup.create(campaignName,campaignUser,
+                         seedForce,N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
+                         matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
+                         matRealFiles,
+                         nAb, nBb,nAlpah,nBeta,nLambda,
+                         useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
     print("===============================================================")
     print("Results computation                                            ")
     print("===============================================================")

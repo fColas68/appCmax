@@ -2,6 +2,7 @@ import random                    # to use distributions and seed
 import statistics        as stat # to compute arithmaetic mean
 import scipy.stats       as sc   # to compute harmonic_mean and geometric_mean
 import ScheduleManagment as sm   # to retrieve PSchedHeader
+import setup             as s    # 
 
 # tools libraries
 import pwa
@@ -127,7 +128,7 @@ class PTimes:
         # =======================================================================
 
         # #1# origin problem instance (not completed)
-        self.Time                           = []
+        self.Times                          = []
         self.n                              = n
         self.LowBound                       = 0.0
         self.StatIndicators                 = []
@@ -420,6 +421,7 @@ def uniform_p(n,seed, a,b):
     random.seed(seed)
     for i in range(n):
         rand = random.uniform(a,b)
+        if s.INT_UNIFORM: rand = round(rand)    # float or integer
         matrix.append(rand)
     # END FOR    
     return matrix
@@ -435,10 +437,12 @@ def non_uniform_p(n,seed, a,b):
     b2 = 0.2*(b-a)
     for i in range(n98):
         rand = random.uniform(a1,b1)
+        if s.INT_NON_UNIFORM: rand = round(rand)    # float or integer
         matrix.append(rand)
     # END FOR
     for i in range(n-n98):
         rand = random.uniform(a2,b2)
+        if s.INT_NON_UNIFORM: rand = round(rand)    # float or integer
         matrix.append(rand)
     # END FOR    
     return matrix

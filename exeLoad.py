@@ -73,13 +73,15 @@ def main():
     #======================================================================
     # Parameters file (json)
     #======================================================================
-    fileSetup = s.ParamFile()
-    fileSetup.create(campaignName,campaignUser,
-                     seedForce,N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
-                     matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
-                     matRealFiles,
-                     nAb, nBb,nAlpah,nBeta,nLambda,
-                     useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
+    if s.EXP_PARAMETERS:
+        fileSetup = s.ParamFile()
+        fileSetup.create(campaignName,campaignUser,
+                         seedForce,N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
+                         matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
+                         matRealFiles,
+                         nAb, nBb,nAlpah,nBeta,nLambda,
+                         useLPT,useSLACK,useLDM,useCOMBINE,useMULTIFIT)
+    # END IF    
 
     print("===============================================================")
     print("Results computation                                            ")

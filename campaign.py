@@ -135,19 +135,32 @@ class Campaign():
     # CSV EXPORT
     # #######################################################################
     def exportCSV(self):
+        
+        #====================================================================
+        # EXPORT RESULT VIA DATA FRAME
+        #====================================================================
 
-        # target file
+        #------------------------------------        
+        # target file 
+        # ...../result/campaignname_user_date/ file.csv
+        #------------------------------------        
         resDir = s.folderResult(self.campaignName, self.campaignUser, self.campaignDate)
-        filename = resDir + s.sepDir()+ self.compainCompleteName+".csv"
-        print("Exporting campaign to %s . please wait..." % (filename))
+        filenameResult = resDir + s.sepDir()+ self.compainCompleteName+".csv"
+
+        #------------------------------------
+        # chck for user
+        #------------------------------------        
+        print("Exporting campaign result to %s . please wait..." % (filenameResult))
         #
         # collumns = ""
         dataResult       = []
         #print(len(self.matricies))
 
+        #------------------------------------        
         # one row per matrice instance and per algorithm.
         # one time for native instance
         # one time for completed m-1 instance
+        #------------------------------------        
         for k in range(len(self.matricies)):
             
             # matricies[k] is a PTimes object
@@ -158,9 +171,41 @@ class Campaign():
             
         # END FOR (for k in range(len(self.matricies)):)
 
+        #------------------------------------        
         # EXPORT
+        #------------------------------------        
         expResultHeader = cm.PTimes.getResultForCSVHeader()
         expResult = pd.DataFrame(dataResult) #, collumns)
-        expResult.to_csv(filename, index=False, header=expResultHeader)
-        
+        expResult.to_csv(filenameResult, index=False, header=expResultHeader)
 
+        if s.EXP_INSTANCES:
+            #====================================================================
+            # EXPORT matricies 
+            #====================================================================
+            for k in range(len(self.matricies)):
+                # matricies[k] is a PTimes object
+                items = self.matricies[k]
+                #------------------------------------        
+                # native matrix part (json InstanceFile)
+                #------------------------------------        
+                instanceFileNative = s.InstanceFile()
+                instanceFileNative.create(self.campaignName, self.campaignUser, self.campaignDate,
+                                          items.generateMethode, items.seed, items.fileName, items.a, items.b, items.alpha,items.beta,items.lambd, items.m, items.n, "NATIVE",
+                                          items.Times, 
+                                          items.LowBound, items.StatIndicators)
+            
+                #------------------------------------        
+                # completed with m-1 jobs matrix part (json InstanceFile)
+                #------------------------------------        
+                instanceFileNative = s.InstanceFile()
+                instanceFileNative.create(self.campaignName, self.campaignUser, self.campaignDate,
+                                          items.generateMethode, items.seed, items.fileName, items.a, items.b, items.alpha,items.beta,items.lambd, items.m, items.m1_n, "COMPLETEDM1",
+                                          items.m1Times, 
+                                          items.m1LowBound, items.m1StatIndicators, items.m1Optimal)
+            # END FOR
+        # END IF if s.EXP_INSTANCES:    
+
+        #------------------------------------
+        # chck for user
+        #------------------------------------        
+        print("Done !")
