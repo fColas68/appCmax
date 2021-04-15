@@ -5,10 +5,12 @@ library(ggplot2)
 #------------------------------------------------
 # Reading file
 #------------------------------------------------
-f <- file.choose(new = FALSE)
-data <- read.csv(file = f, header = TRUE)
+#f <- file.choose(new = FALSE)
+f <- "../results/Recette_FCO_15042021/Recette_FCO_15042021.csv"
+data <- read_csv(file = f)
 
-d <- filter(data, data$resultConcerns=="m1Results")
+d <- data %>%
+  filter(resultConcerns=="m1Results")
 
 #------------------------------------------------
 # Draw the graph

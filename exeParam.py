@@ -30,7 +30,7 @@ def main():
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
-    M_NumberEnd          = 3                # int
+    M_NumberEnd          = 5                # int
 
     # Job set generation methods ===========================================
     matUniformNumber    = 1                 # int
