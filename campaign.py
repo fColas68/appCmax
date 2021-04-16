@@ -1,6 +1,7 @@
 import time
-import pandas as pd
-import os
+import pandas as pd     
+import os               # to use path 
+import shutil           # copy files
 
 import matrix            as cm
 import algorithms        as cmm
@@ -13,7 +14,7 @@ class Campaign():
     # #######################################################################
     # CONSTRUCTOR
     # #######################################################################
-    def __init__(self, campaignName, campaignUser, N_NumberBegin, N_NumberEnd, M_NumberBegin, M_NumberEnd, matUniformNumber, matNonUniformNumber, matGammaNumber, matBetaNumber, matExponentialNumber, matRealFiles, a, b, alpha, beta, lambd, seedForce = None):
+    def __init__(self, campaignName, campaignUser, N_NumberBegin, N_NumberEnd, N_List, M_NumberBegin, M_NumberEnd, M_List, matUniformNumber, matNonUniformNumber, matGammaNumber, matBetaNumber, matExponentialNumber, matRealFiles, a, b, alpha, beta, lambd, seedForce = None):
         # set of testing matricies -------------------------------------
         self.matricies           = []
         #---------------------------------------------------------------
@@ -24,8 +25,10 @@ class Campaign():
         #---------------------------------------------------------------
         self.N_NumberBegin        = N_NumberBegin
         self.N_NumberEnd          = N_NumberEnd
+        self.N_List               = N_List
         self.M_NumberBegin        = M_NumberBegin
         self.M_NumberEnd          = M_NumberEnd
+        self.M_List               = M_List
         #---------------------------------------------------------------
         self.matUniformNumber    = matUniformNumber
         self.matNonUniformNumber = matNonUniformNumber
@@ -53,41 +56,54 @@ class Campaign():
     # MATRICIES CONSTRUCTION
     # #######################################################################
     def createMatricies(self):
-
+        #=====================================================
+        # filling in the iteration lists.
+        # Jobs N_List and Machines M_List
+        #=====================================================
+        # j job iterator
+        if len(self.N_List) == 0:
+            for j in range(self.N_NumberBegin, self.N_NumberEnd+1):
+                self.N_List.append(j)
+        # END IF
+        # i machines iterator
+        if len(self.M_List) == 0:
+            for i in range(self.M_NumberBegin, self.M_NumberEnd+1):
+                self.M_List.append(i)
+        # END IF
         #=====================================================
         # according statistics distributions
         # j is the jobs iterator
         # i is the machines itérator
         #=====================================================
-        for j in range(self.N_NumberBegin, self.N_NumberEnd+1):
-            for i in range(self.M_NumberBegin, self.M_NumberEnd+1):
+        for j in range(len(self.N_List)):
+            for i in range(len(self.M_List)):
                 # UNIFORM 
                 for k in range(self.matUniformNumber):
-                    m = cm.PTimes("UNIFORM", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
+                    m = cm.PTimes("UNIFORM", self.N_List[j], self.M_List[i], self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
                     self.matricies.append(m)
                 # END FOR    
 
                 # NON UNIFORM P    
                 for k in range(self.matNonUniformNumber):
-                    m = cm.PTimes("NON_UNIFORM", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
+                    m = cm.PTimes("NON_UNIFORM", self.N_List[j], self.M_List[i], self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
                     self.matricies.append(m)
                 # END FOR
                 
                 # GAMMA P    
                 for k in range(self.matGammaNumber):
-                    m = cm.PTimes("GAMMA", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
+                    m = cm.PTimes("GAMMA", self.N_List[j], self.M_List[i], self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
                     self.matricies.append(m)
                 # END FOR
                 
                 # BETA P    
                 for k in range(self.matBetaNumber):
-                    m = cm.PTimes("BETA", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
+                    m = cm.PTimes("BETA", self.N_List[j], self.M_List[i], self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
                     self.matricies.append(m)
                 # END FOR
 
                 # EXPENENTIAL P    
                 for k in range(self.matExponentialNumber):
-                    m = cm.PTimes("EXPONENTIAL", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
+                    m = cm.PTimes("EXPONENTIAL", self.N_List[j], self.M_List[i], self.a, self.b, self.alpha, self.beta, self.lambd, "", self.seed)
                     self.matricies.append(m)
                 # END FOR
             # END for i in range(self.M_NumberBegin, self.M_NumberEnd)):
@@ -97,10 +113,11 @@ class Campaign():
         # Real life jobs log
         # i is the machines itérator
         #=====================================================
-        for i in range(self.M_NumberBegin, self.M_NumberEnd+1):
+        for i in range(len(self.M_List)):
             # REAL P    
             for k in range(len(self.matRealFiles)):
-                m = cm.PTimes("REAL", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, self.matRealFiles[k])
+                m = cm.PTimes("REAL", None, self.M_List[i], None, None, None, None, None, self.matRealFiles[k])
+                # m = cm.PTimes("REAL", j, i, self.a, self.b, self.alpha, self.beta, self.lambd, self.matRealFiles[k])
                 self.matricies.append(m)
             # END FOR    
         # END for i in range(self.M_NumberBegin, self.M_NumberEnd)):
@@ -137,7 +154,9 @@ class Campaign():
     def exportCSV(self):
         
         #====================================================================
-        # EXPORT RESULT VIA DATA FRAME
+        #
+        #               EXPORT RESULT VIA DATA FRAME
+        #
         #====================================================================
 
         #------------------------------------        
@@ -178,10 +197,13 @@ class Campaign():
         expResult = pd.DataFrame(dataResult) #, collumns)
         expResult.to_csv(filenameResult, index=False, header=expResultHeader)
 
+        #====================================================================
+        #
+        #                   EXPORT matricies (Time lists)
+        #
+        #====================================================================
+
         if s.EXP_INSTANCES:
-            #====================================================================
-            # EXPORT matricies 
-            #====================================================================
             for k in range(len(self.matricies)):
                 # matricies[k] is a PTimes object
                 items = self.matricies[k]
@@ -203,9 +225,39 @@ class Campaign():
                                           items.m1Times, 
                                           items.m1LowBound, items.m1StatIndicators, items.m1Optimal)
             # END FOR
-        # END IF if s.EXP_INSTANCES:    
+        # END IF if s.EXP_INSTANCES:
+
+        #====================================================================
+        #
+        #           COPY ANALYSIS SCRIPTS FROM AALYSIS TO RESULTS FOLDER
+        #       and EXECUTE THEME
+        #
+        #====================================================================
+        a = s.folder(s.FOLDER_ANALYSIS)
+        content = os.listdir(a)
+        for fileName in content:
+            if fileName.endswith(".r"):
+
+                # copy
+                filePath = shutil.copy(a+s.sepDir()+fileName, resDir)
+
+                # execute
+                s.analysisExecute(resDir+s.sepDir()+fileName)
+
+            # END IF
+        # END FOR
+
+        
+
+        #====================================================================
+        #
+        #         COPY ANALYSIS SCRIPTS FROM AALYSIS TO RESULTS FOLDER
+        #
+        #====================================================================
+
+        
 
         #------------------------------------
-        # chck for user
+        # check for user
         #------------------------------------        
         print("Done !")

@@ -31,10 +31,12 @@ def main():
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
     N_NumberBegin        = d["N_NumberBegin"]
     N_NumberEnd          = d["N_NumberEnd"]
+    N_List               = d["N_List"]
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = d["M_NumberBegin"]
     M_NumberEnd          = d["M_NumberEnd"]
+    M_List               = d["M_List"]
 
     # Job set generation methods ===========================================
     matUniformNumber    = d["matUniformNumber"]
@@ -76,7 +78,7 @@ def main():
     if s.EXP_PARAMETERS:
         fileSetup = s.ParamFile()
         fileSetup.create(campaignName,campaignUser,
-                         seedForce,N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
+                         seedForce,N_NumberBegin,N_NumberEnd, N_List, M_NumberBegin,M_NumberEnd, M_List, 
                          matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
                          matRealFiles,
                          nAb, nBb,nAlpah,nBeta,nLambda,
@@ -86,7 +88,7 @@ def main():
     print("===============================================================")
     print("Results computation                                            ")
     print("===============================================================")
-    c = cp.Campaign(campaignName, campaignUser, N_NumberBegin, N_NumberEnd, M_NumberBegin, M_NumberEnd, matUniformNumber, matNonUniformNumber, matGammaNumber, matBetaNumber, matExponentialNumber, matRealFiles, nAb, nBb, nAlpah, nBeta, nLambda, seedForce)
+    c = cp.Campaign(campaignName, campaignUser, N_NumberBegin, N_NumberEnd, N_List, M_NumberBegin, M_NumberEnd, M_List, matUniformNumber, matNonUniformNumber, matGammaNumber, matBetaNumber, matExponentialNumber, matRealFiles, nAb, nBb, nAlpah, nBeta, nLambda, seedForce)
     #
     if useLPT==1: c.runAlgorithm(cmm.lpt)
     if useSLACK==1: c.runAlgorithm(cmm.slack)

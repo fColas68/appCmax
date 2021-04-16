@@ -5,6 +5,7 @@ import setup as s
 import time
 import os
 import json
+from subprocess import call 
 
 ####################################################################
 #
@@ -23,6 +24,7 @@ OS_Name = "LINUX"
 # folders
 #=========================================
 FOLDER_RESULTS   = "results"
+FOLDER_ANALYSIS  = "analysis"
 FOLDER_ZIPPEDLOG = "gz"
 FOLDER_PWA       = "logpwa"
 
@@ -81,7 +83,9 @@ def folder(f):
     return the folder prefixed with the relative path. eg ./f (for linux) or .\f (for windows)
     """
     # INIT
-    resFolder = "." + sepDir() + f
+    currentPath = os.getcwd()
+    # resFolder = "." + sepDir() + f
+    resFolder = currentPath + sepDir() + f
 
     # Create folder if not exists
     if not os.path.exists(resFolder):
@@ -94,14 +98,25 @@ def folderResult(name, user, date):
     r = folder(FOLDER_RESULTS+ sepDir() + name+"_"+user+"_"+date)
     return r
 
-def campaignFileResultName(name, user, date):
-    return name+"_"+user+"_"+date
+def campaignFileResultName(name=None, user=None, date=None):
+    # return name+"_"+user+"_"+date
+    return "result"
 
-def campaignFileParametersName(name, user, date):
-    return campaignFileResultName(name, user, date)+"_Param"
+def campaignFileParametersName(name, user, date, ext = ".json"):
+    return "parameters_" + name + "_" + user + "_" + date + ext
 
 ####################################################################
 #
+# running an R script
+#
+####################################################################
+def analysisExecute(rFileName):
+    command = "R -q --vanilla < "+rFileName
+    call([command])
+
+
+####################################################################
+# CLASS ParamFile
 # JSON Parameters files Management
 #
 ####################################################################
@@ -123,7 +138,7 @@ class ParamFile:
     def create(self,
                campaignName, campaignUser,
                seedForce,
-               N_NumberBegin,N_NumberEnd,M_NumberBegin,M_NumberEnd,
+               N_NumberBegin,N_NumberEnd,N_List, M_NumberBegin,M_NumberEnd, M_List,
                matUniformNumber,matNonUniformNumber,matGammaNumber,matBetaNumber,matExponentialNumber,
                matRealFiles,
                A, B,
@@ -136,29 +151,33 @@ class ParamFile:
 
         # complete file name
         resDir = folderResult(self.campaignName, self.campaignUser, self.campaignDate)
-        self.completeFileName = resDir + s.sepDir() + campaignFileParametersName(campaignName, campaignUser, self.campaignDate)+".json"
+        self.completeFileName = resDir + s.sepDir() + campaignFileParametersName(campaignName, campaignUser, self.campaignDate)
+
         # self.fileObj : json content
         #
         self.fileObj['campaign']=[]
         self.fileObj['campaign'].append({
-            'campaignName' : self.campaignName,
-            'campaignUser' : self.campaignUser,
-            'campaignDate' : self.campaignDate})
+            'campaignName'  : self.campaignName,
+            'campaignUser'  : self.campaignUser,
+            'campaignDate'  : self.campaignDate})
         #
         self.fileObj['size']=[]
         self.fileObj['size'].append({
             'N_NumberBegin' : N_NumberBegin,
-            'N_NumberEnd' : N_NumberEnd,
+            'N_NumberEnd'   : N_NumberEnd,
             'M_NumberBegin' : M_NumberBegin,
-            'M_NumberEnd' : M_NumberEnd})
+            'M_NumberEnd'   : M_NumberEnd,
+            'N_List'        : N_List,
+            'M_List'        : M_List})
+        
         #
         self.fileObj['generation_methods']=[]
         self.fileObj['generation_methods'].append({
-            'seedForce' : seedForce,
-            'matUniformNumber' :matUniformNumber,
-            'matNonUniformNumber' :matNonUniformNumber,
-            'matGammaNumber' : matGammaNumber  ,
-            'matBetaNumber': matBetaNumber,
+            'seedForce'            : seedForce,
+            'matUniformNumber'     :matUniformNumber,
+            'matNonUniformNumber'  :matNonUniformNumber,
+            'matGammaNumber'       : matGammaNumber  ,
+            'matBetaNumber'        : matBetaNumber,
             'matExponentialNumber' : matExponentialNumber})
         #
         self.fileObj['generation_PWA']=[]
@@ -210,8 +229,6 @@ class ParamFile:
     def save(self):
         with open(self.completeFileName,'w') as fileJSON:
             json.dump(self.fileObj, fileJSON)
-
-
 
 
 ####################################################################

@@ -137,7 +137,7 @@ def pwaFileChoice(chooseMode = None):
     print(files)
     return files
 
-##FOR TEST THIS SCRIPT
+##TO TEST THIS SCRIPT
 ##pwaFileImport(True, True)
 ##logTimes = pwaFileRead(logFolder()+"/NASA-iPSC-1993-3.1-cln.swf")
 ##print(logTimes)
