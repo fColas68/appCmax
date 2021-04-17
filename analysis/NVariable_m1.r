@@ -31,14 +31,5 @@ d %>%
     y = "Makespan normalisé Cmax-optimal"
   )
 
+  ggsave(file = "nVariable_m1.pdf")
 
-  #------------------------------------------------
-  # Filter, result with data$V9=="m1Results"
-  #------------------------------------------------
-  #d <- subset(data, data$resultConcerns=="m1Results")
-  #------------------------------------------------
-  # Factor management (for series)
-  #------------------------------------------------
-  # d$algorithm = as.factor(d$algoName)
-  
-  

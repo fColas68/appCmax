@@ -1,41 +1,33 @@
+#! /usr/bin/Rscript --vanilla
+
 library(readr)
+library(dplyr) # to use  %>% notation
 library(ggplot2)
-library(magrittr) # to use  %>% notation
 
 #------------------------------------------------
 # Reading file
 #------------------------------------------------
-f <- file.choose(new = FALSE)
-data <- read.csv(file = f, header = TRUE)
+#f <- file.choose(new = FALSE)
+f <- "result.csv"
+data <- read_csv(file = f)
 
-#------------------------------------------------
-# Filter, result with data$V9=="m1Results"
-#------------------------------------------------
-d <- subset(data, data$resultConcerns=="Results")
-
-#------------------------------------------------
-# Factor management (for series)
-#------------------------------------------------
-d$algorithm = as.factor(d$algoName)
+d <- data %>%
+  filter(resultConcerns=="Results")
 
 #------------------------------------------------
 # Draw the graph
 #------------------------------------------------
-d %>% ggplot()
 d %>%
-  ggplot(aes(x = n, y = (makespan/LowBound), color=algorithm, shape=algorithm))+
-  #ggplot(aes(x = n, y = (makespan), color=algorithm, shape=algorithm))+
+  # filter(resultConcerns=="m1Results") %>%
+  ggplot(aes(x = n, y = (makespan/LowBound), color=algoName, shape=algoName))+
   geom_point()+
-  geom_smooth(method=loess, se=FALSE)+
-  #geom_smooth(method=lm)+
-  # geom_line() + 
-  labs(
-    title = "Comparaison",
-    y = "Makespan normalisé Cmax-optimal"
-  )
+  # geom_smooth(formula = y ~ x,  method=loess, se=FALSE)+
+  # geom_smooth(formula = y ~ x, method=lm, se=FALSE)+
+  geom_line() + 
+  facet_grid(d$m ~ d$generateMethode)
+labs(
+  title = "Comparaison",
+  y = "Makespan normalisé Cmax-optimal"
+)
+ggsave(file = "nVariable_nat.pdf")
 
-
-
-# keep it for later 
-#pdw <- getwd()
-#setwd("..//results") 
