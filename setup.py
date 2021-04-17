@@ -5,7 +5,9 @@ import setup as s
 import time
 import os
 import json
-from subprocess import call 
+# from subprocess import call
+import subprocess
+
 
 ####################################################################
 #
@@ -18,7 +20,7 @@ from subprocess import call
 # Values LINUX
 #        WINDOWS
 #=========================================
-OS_Name = "LINUX"
+OS_NAME = "LINUX"
 
 #=========================================
 # folders
@@ -64,14 +66,14 @@ INT_NON_UNIFORM = True
 def sepDir():
     """
     Directory separator
-    return "/" if OS_Name = "LINUX
+    return "/" if OS_NAME = "LINUX
     return "\" else
     """
     linuxPrefix = "/"
     winPrefix   = "\\"
 
     sep = linuxPrefix
-    if OS_Name != "LINUX":
+    if OS_NAME != "LINUX":
         sep = winPrefix
     # END IF
     return sep
@@ -110,10 +112,32 @@ def campaignFileParametersName(name, user, date, ext = ".json"):
 # running an R script
 #
 ####################################################################
-def analysisExecute(rFileName):
-    command = "R -q --vanilla < "+rFileName
-    call([command])
+def analysisExecute(rFileName, workDir):
+    currentDir = os.getcwd()
+    output = None
 
+    if OS_NAME == "LINUX":
+        command_lin = ["Rscript", "--vanilla", rFileName]
+        print("####################")
+        print("run >>"+rFileName)
+        try:
+            os.chdir(workDir)                                   # required to find the files (pdf) created by the R scripts
+            output = subprocess.call(command_lin, shell=False)  # shell=False otherwise, do not execute the
+            print("OK", output)
+        except subprocess.CalledProcessError as e:
+            chemin = os.getcwd() 
+            output = e.output
+            print("ERREUR", chemin, e)
+        # END TRY
+    else:
+        # !!!! not tested !!!!
+        os.chdir(workDir)                                   # required to find the files (pdf) created by the R scripts
+        command_notLin = "cmd /k Rscript --vanilla < "+rFileName
+        os.system(command_notLin)
+    # END IF
+
+    # retrieve current directory
+    os.chdir(currentDir)
 
 ####################################################################
 # CLASS ParamFile

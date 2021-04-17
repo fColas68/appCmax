@@ -242,7 +242,7 @@ class Campaign():
                 filePath = shutil.copy(a+s.sepDir()+fileName, resDir)
 
                 # execute
-                s.analysisExecute(resDir+s.sepDir()+fileName)
+                s.analysisExecute(resDir+s.sepDir()+fileName, resDir)
 
             # END IF
         # END FOR

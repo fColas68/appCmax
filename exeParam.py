@@ -18,7 +18,7 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "Recette2"     # string
+    campaignName         = "test_job10a30_m10_15"  # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
@@ -26,15 +26,15 @@ def main():
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
     N_NumberBegin        = 10               # int
-    N_NumberEnd          = 100              # int
+    N_NumberEnd          = 30              # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
-    N_List               = [10,50,100]
+    N_List               = []
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
-    M_NumberEnd          = 3                # int
+    M_NumberEnd          = 10               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
-    M_List               = [3,10,25]
+    M_List               = [10,15,20]
 
     # Job set generation methods ===========================================
     matUniformNumber    = 1                 # int

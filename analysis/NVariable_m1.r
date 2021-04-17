@@ -1,3 +1,5 @@
+#! /usr/bin/Rscript --vanilla
+
 library(readr)
 library(dplyr) # to use  %>% notation
 library(ggplot2)
