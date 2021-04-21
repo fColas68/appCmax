@@ -18,7 +18,7 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "test_job10a30_m10_15"  # string
+    campaignName         = "dCroce_1_100_10"   # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
@@ -28,17 +28,17 @@ def main():
     N_NumberBegin        = 10               # int
     N_NumberEnd          = 30              # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
-    N_List               = []
+    N_List               = [40, 50]
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
     M_NumberEnd          = 10               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
-    M_List               = [10,15,20]
+    M_List               = [5,10,25]
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 1                 # int
-    matNonUniformNumber = 1                 # int 
+    matUniformNumber    = 10                # int
+    matNonUniformNumber = 10                # int 
     matGammaNumber      = 0                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int

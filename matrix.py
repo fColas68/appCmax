@@ -15,6 +15,9 @@ class PTimes:
     """
     management of the PTimes object: time list. 
     """
+    id = 0
+
+    
     # ############################################################################
     #
     #                               CONSTRUCTOR
@@ -100,6 +103,12 @@ class PTimes:
         # Output ---------------------------------
         nichts
         """
+        # =======================================================================
+        # ID's matrice (for export)
+        # =======================================================================
+        PTimes.id += 1
+        self.idMatrix = PTimes.id
+
         # =======================================================================
         # generation properties
         # =======================================================================
@@ -335,7 +344,7 @@ class PTimes:
     #  getResultForCSVHeader
     # ============================================================================
     def getResultForCSVHeader():
-        lstHeader       = ["generateMethode", "m", "seed", "n", "LowBound", "m1_n", "m1LowBound", "m1Optimal"]
+        lstHeader       = ["generateMethode", "m", "id", "seed", "n", "[a-b]", "LowBound", "m1_n", "m1LowBound", "m1Optimal"]
         lstSep          = ["resultConcerns"]
         lstPSchedHeder  = sm.PSched.getResultHeader()
         return lstHeader + lstSep +lstPSchedHeder
@@ -346,7 +355,7 @@ class PTimes:
     # ============================================================================
     def getResultForCSV(self):
         listReturn = []
-        oriRes = [self.generateMethode, self.m, self.seed, self.n, self.LowBound, self.m1_n, self.m1LowBound, self.m1Optimal]
+        oriRes = [self.generateMethode, self.m, self.idMatrix, self.seed, self.n, str(self.a) + "-"+ str(self.b), self.LowBound, self.m1_n, self.m1LowBound, self.m1Optimal]
         
         #----------------------------------------
         # Results and m1Results lists structures

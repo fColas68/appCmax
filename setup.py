@@ -117,7 +117,7 @@ def analysisExecute(rFileName, workDir):
     output = None
 
     if OS_NAME == "LINUX":
-        command_lin = ["Rscript", "--vanilla", rFileName]
+        command_lin = ["Rscript", rFileName] # "--vanilla",
         print("####################")
         print("run >>"+rFileName)
         try:

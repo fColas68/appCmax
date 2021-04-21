@@ -13,4 +13,11 @@ data <- read_csv(file = f)
 
 d <- data %>%
   filter(resultConcerns=="m1Results")
+
+#------------------------------------------------
+# Reading file
+#------------------------------------------------
+
+
+
 View(d)
