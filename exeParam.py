@@ -18,7 +18,7 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "dCroce_1_100_10"   # string
+    campaignName         = "dCroce_1_10000_50_10-50-100-500-1000"   # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
@@ -28,7 +28,7 @@ def main():
     N_NumberBegin        = 10               # int
     N_NumberEnd          = 30              # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
-    N_List               = [40, 50]
+    N_List               = [10,50,100,500,1000]
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
@@ -51,7 +51,7 @@ def main():
 
     # Properties of generation ============================================
     nAb                 = 1.0                # float
-    nBb                 = 100.0             # float
+    nBb                 = 10000.0             # float
     nAlpah              = 1.0               # float
     nBeta               = 1.0               # float
     nLambda             = 1.0               # float

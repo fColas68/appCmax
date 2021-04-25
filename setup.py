@@ -100,6 +100,13 @@ def folderResult(name, user, date):
     r = folder(FOLDER_RESULTS+ sepDir() + name+"_"+user+"_"+date)
     return r
 
+def folderResultMatrix(name, user, date):
+    folderReultCampaign = FOLDER_RESULTS+ sepDir() + name+"_"+user+"_"+date
+    folder(FOLDER_RESULTS)
+    folder(folderReultCampaign)
+    r = folder(folderReultCampaign + sepDir()+"instanceFiles")
+    return r
+
 def campaignFileResultName(name=None, user=None, date=None):
     # return name+"_"+user+"_"+date
     return "result"
@@ -279,11 +286,14 @@ class InstanceFile:
                         matTimes, 
                         lowBound, matStatIndicators, optimal = None):
                                        
-        # JSON PARAMETERS FILE      
+
 
         # complete file name
-        resDir = folderResult(campaignName, campaignUser, campaignDate)
+        resDir = folderResultMatrix(campaignName, campaignUser, campaignDate)
+        print(resDir)
         self.completeFileName = resDir + s.sepDir() + "instance_"+sType+"_"+generateMethode+"_"+str(seed)+"_"+str(n)+"_"+str(m)+".json"
+        print(self.completeFileName)
+        
         # self.fileObj : json content
         #
         self.fileObj['campaign']=[]
