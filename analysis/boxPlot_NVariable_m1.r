@@ -10,6 +10,8 @@ library(ggplot2)
 #f <- file.choose(new = FALSE)
 f <- "result.csv"
 data <- read_csv(file = f)
+timesNumber<- factor(d$n) # for boxPlot
+an <- factor(d$algoName)
 
 d <- data %>%
   filter(resultConcerns=="m1Results")
@@ -19,17 +21,14 @@ d <- data %>%
 #------------------------------------------------
 d %>%
   # filter(resultConcerns=="m1Results") %>%
-  ggplot(aes(x = n, y = (makespan/m1Optimal), color=algoName, shape=algoName))+
+  ggplot(aes(x = timesNumber, y = (makespan/m1Optimal), color=algoName, shape=algoName))+
   #ggplot(aes(x = n, y = (makespan), color=algorithm, shape=algorithm))+
-  geom_point()+
-  # geom_smooth(formula = y ~ x,  method=loess, se=FALSE)+
-  # geom_smooth(formula = y ~ x, method=lm, se=FALSE)+
-  geom_line() + 
+  geom_boxplot()+
   facet_grid(d$m ~ d$generateMethode)
   labs(
     title = "Comparaison",
     y = "Makespan normalisé Cmax-optimal"
   )
 
-  ggsave(file = "nVariable_m1.pdf")
+  ggsave(file = "res_boxPlot_nVariable_m1.pdf")
 
