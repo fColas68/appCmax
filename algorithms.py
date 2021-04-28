@@ -342,7 +342,7 @@ def ldm(costMatrix, m):
 #                               COMBINE                                 #
 # need FFD algorithm                                                    #
 # #######################################################################
-def combine(costMatrix, m, alpha = 0.005):
+def combine(costMatrix, m, alpha = 0.005, verbose = False):
     """
     alpha = 0.005 
     """
@@ -380,6 +380,13 @@ def combine(costMatrix, m, alpha = 0.005):
     Mm         = (M / ( (4/3) - (1 / (3*m) ) ))
     p1         = matrixW[0]
     mFFD = 0
+    
+    #=============================================
+    # for debug 
+    #=============================================
+    if (verbose):
+        print("Upper bound retourned by LPT :", M)
+        
     
     if M >= 1.5 * A:
         #==========================================

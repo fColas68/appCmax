@@ -334,3 +334,26 @@ class InstanceFile:
     def save(self):
         with open(self.completeFileName,'w') as fileJSON:
             json.dump(self.fileObj, fileJSON)
+
+    # ==================================================================
+    # READ File
+    # open file
+    # read values
+    # return tuple 
+    # ==================================================================
+    def read(self,completeFileName):
+        self.completeFileName = completeFileName
+        with open(self.completeFileName) as jsonFile:
+            dd = json.load(jsonFile)
+        newDict = {}
+        # read the json dict
+        for val in dd.values():
+            for i in range(len(val)):
+                for param,value in val[i].items():
+                    newDict[param]= value
+                # END FOR
+            # END FOR
+        # END FOR
+        print(newDict)
+        return newDict
+

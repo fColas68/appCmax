@@ -18,7 +18,7 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "dCroce_1_10000_50_10-50-100-500-1000"   # string
+    campaignName         = "testCombine"   # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
@@ -28,17 +28,17 @@ def main():
     N_NumberBegin        = 10               # int
     N_NumberEnd          = 30              # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
-    N_List               = [10,50,100,500,1000]
+    N_List               = [10]
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
     M_NumberEnd          = 10               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
-    M_List               = [5,10,25]
+    M_List               = [5]
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 10                # int
-    matNonUniformNumber = 10                # int 
+    matUniformNumber    = 1                # int
+    matNonUniformNumber = 0                # int 
     matGammaNumber      = 0                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
@@ -57,9 +57,9 @@ def main():
     nLambda             = 1.0               # float
 
       #Algorithms ==========================================================
-    useLPT              = 1                 # 1 or 0
-    useSLACK            = 1                 # 1 or 0
-    useLDM              = 1                 # 1 or 0
+    useLPT              = 0                 # 1 or 0
+    useSLACK            = 0                 # 1 or 0
+    useLDM              = 0                 # 1 or 0
     useCOMBINE          = 1                 # 1 or 0
     useMULTIFIT         = 0                 # 1 or 0
 

@@ -263,6 +263,8 @@ class ldmPartition():
             print("")
             for j in range(len(self.part[i].tupl)):
                 print(self.part[i].tupl[j].jobsSet, end = " ")
+            # END FOR
+        # END FOR    
     # =============================================
     # partMerge
     # =============================================
@@ -369,6 +371,25 @@ class PSched:
         """
         return [self.algoName, self.timeExpected, self.makespan, self.time]
         #return self.algoName, self.timeExpected, self.makespan, self.time
+    
+    def printResult(self):
+        """
+        self.sched is a Processor object
+        formats the result as follows:
+        P1 : [a,b,c,d,e]
+        Pi : ...
+        pm : [f,g,h]
+        """
+        print("")
+        nProcessor = 0
+        
+        print("Machine number :",len(self.sched))
+        for i in range(len(self.sched)):
+            nProcessor += 1
+            
+            print("processor ",nProcessor," total sched : ", sum(self.sched[i].jobsSet))
+            print(self.sched[i].jobsSet)
+        
 
     # =============================================
     # SET  
@@ -432,10 +453,11 @@ def ffd2(sizesList, binSize, sortList = False):
 def ffd(sizesList, binSize):
     """
     order the given objects in a non-decreasing order
-    so that wehaves1≥···≥sn. Initialize a counterN= 0.2.
+    so that we have s1≥···≥sn. Initialize a counter N= 0.
+    2.
     Let the bins beB1,···, Bn.
-    Put the next (first) object in thefirst “possible” bin ,
-    scanning the bins in the orderB1,···, Bn.If a new bin is used, incrementN.
+    Put the next (first) object in the first “possible” bin ,
+    scanning the bins in the orderB1,···, Bn.If a new bin is used, increment N.
     Return number of bins used, and the binpacking computed
     """
     #------------------------------------------    
@@ -466,6 +488,8 @@ def ffd(sizesList, binSize):
             packing[binsNumber-1].addJob(sizesListW[i])
         # END IF
     # END FOR
+
+## kept for debug    
 ##    print("Liste en entree")
 ##    print(sizesListW)
 ##    print("Packing")
@@ -474,6 +498,6 @@ def ffd(sizesList, binSize):
 ##        print("")
 ##        print(packing[i].getTotal())
 ##        print(packing[i].jobsSet)
-##    input("haha")    
+##    input("...")    
     
     return binsNumber,packing
