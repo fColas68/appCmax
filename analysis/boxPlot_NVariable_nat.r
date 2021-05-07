@@ -1,31 +1,44 @@
 #! /usr/bin/Rscript --vanilla
-
 library(readr)
 library(dplyr) # to use  %>% notation
 library(ggplot2)
+
+#------------------------------------------------
+#init workspace
+#------------------------------------------------
+rm(list=ls())
 
 #------------------------------------------------
 # Reading file
 #------------------------------------------------
 #f <- file.choose(new = FALSE)
 f <- "result.csv"
-data <- read_csv(file = f)
-nf<- factor(d$n) # for boxPlot
+dr <- read_csv(file = f)
 
-d <- data %>%
+#------------------------------------------------
+# Filter dr for only Results
+#------------------------------------------------
+d <- dr %>%
   filter(resultConcerns=="Results")
+
+#------------------------------------------------
+# factor for box plot
+#------------------------------------------------
+timesNumber<- factor(d$n) # for boxPlot
 
 #------------------------------------------------
 # Draw the graph
 #------------------------------------------------
 d %>%
-  # filter(resultConcerns=="m1Results") %>%
-  ggplot(aes(x = nf, y = (makespan/LowBound), color=algoName, shape=algoName))+
+  ggplot(aes(x = timesNumber, y = (makespan/LowBound), color=algoName, shape=algoName))+
   geom_boxplot()+
   facet_grid(d$m ~ d$generateMethode)
-labs(
-  title = "Comparaison",
-  y = "Makespan normalisé Cmax-optimal"
-)
+  labs(
+    title = "Comparison",
+      y = "Normalized Makespan Cmax/Optimal"
+  )
+#------------------------------------------------
+# Save graph in pdf file
+#------------------------------------------------
 ggsave(file = "res_boxPlot_nVariable_nat.pdf")
 
