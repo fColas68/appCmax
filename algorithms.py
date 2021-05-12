@@ -385,7 +385,7 @@ def combine(costMatrix, m, alpha = 0.005, verbose = False):
     # for debug 
     #=============================================
     if (verbose):
-        print("Upper bound retourned by LPT :", M)
+        print("Upper bound returned by LPT :", M)
         
     
     if M >= 1.5 * A:

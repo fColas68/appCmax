@@ -279,7 +279,8 @@ tm_results<-rbind(tm_results,tm_result_raw)
 #   RECORD RESULTS (MAKESPAN and TIMES)
 #
 #///////////////////////////////////////////////////////////////
-write.table(mk_results, file = "res_dellaCroce_makesan.csv",
+
+write.table(mk_results, file = "cp_dellaCroce_m1_makespan.csv",
             sep = "\t", row.names = F)
-write.table(tm_results, file = "res_dellaCroce_time.csv",
+write.table(tm_results, file = "cp_dellaCroce_m1_time.csv",
             sep = "\t", row.names = F)

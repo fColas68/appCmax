@@ -18,23 +18,23 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "testCombine"   # string
+    campaignName         = "uni_test3d_m3_100n200_400i_unif_LPT"      # string
     campaignUser         = "FCO"            # string
 
     # Seed ================================================================
     seedForce            = None             # integer
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
-    N_NumberBegin        = 10               # int
-    N_NumberEnd          = 30              # int
+    N_NumberBegin        = 200             # int
+    N_NumberEnd          = 400             # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
-    N_List               = [10]
+    N_List               = []
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
     M_NumberBegin        = 3                # int
-    M_NumberEnd          = 10               # int
+    M_NumberEnd          = 100               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
-    M_List               = [5]
+    M_List               = []
 
     # Job set generation methods ===========================================
     matUniformNumber    = 1                # int
@@ -51,16 +51,16 @@ def main():
 
     # Properties of generation ============================================
     nAb                 = 1.0                # float
-    nBb                 = 10000.0             # float
+    nBb                 = 1000.0             # float
     nAlpah              = 1.0               # float
     nBeta               = 1.0               # float
     nLambda             = 1.0               # float
 
       #Algorithms ==========================================================
-    useLPT              = 0                 # 1 or 0
+    useLPT              = 1                 # 1 or 0
     useSLACK            = 0                 # 1 or 0
     useLDM              = 0                 # 1 or 0
-    useCOMBINE          = 1                 # 1 or 0
+    useCOMBINE          = 0                 # 1 or 0
     useMULTIFIT         = 0                 # 1 or 0
 
     # #######################################################################

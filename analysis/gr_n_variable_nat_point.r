@@ -34,5 +34,6 @@ labs(
   title = "Comparaison",
   y = "Makespan normalisé Cmax-optimal"
 )
-ggsave(file = "res_point_nVariable_nat.pdf")
+
+ggsave(file = "gr_n_variable_nat_point.pdf")
 
