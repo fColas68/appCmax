@@ -25,21 +25,25 @@ f <- "result.csv"
 data <- read_csv(file = f)
 
 d <- data %>%
-  filter(resultConcerns=="m1Results")
+  filter(resultConcerns=="Results")
 
-val <- (d$makespan/d$m1Optimal)  # value
+val <- (d$makespan/d$LowBound)  # value
 job <- d$n         # x
 proc<- d$m        # Y
-algo<- d$algoName[1]
+
+algo     <- d$algoName[1]
+instType <- "NAT"
+distType <- d$generateMethode[1]
 
 #------------------------------------------------
 # to save Draw in pdf file (vector)
 #------------------------------------------------
-name <- algo
-ext <- ".pdf"
-n <- paste(name,"_n_m_variable_3d",ext) 
+name      <- paste("rr_",algo,"_",instType,"_",distType,"_","makespanDIVlowBound")
+titleMain <- paste(algo," ",instType," ",distType," ","Makespan / (nat) Low bound")
+ext       <- ".pdf"
+nm         <- paste(name,"_nm_var_3d",ext) 
 
-pdf(file=n)
+pdf(file=nm)
 
 
 #------------------------------------------------
@@ -52,13 +56,14 @@ p <- scatter3D(x=job,y=proc,z=val,
               ticktype = "detailed", 
               lwd = 4,
               colkey = TRUE, 
-              main =algo,
+              main =titleMain,
+              expand =0.1,
               pch = 19,  
               theta = 30, 
               phi = 30, 
               xlab = "jobs numbers",
               ylab ="machines number", 
-              zlab = "nomalized makespan Cmax/Optimal"
+              zlab = "nomalized makespan Cmax / (nat) Low bound"
 )
 
 #------------------------------------------------

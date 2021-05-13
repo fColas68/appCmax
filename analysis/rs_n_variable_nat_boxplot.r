@@ -16,32 +16,29 @@ f <- "result.csv"
 dr <- read_csv(file = f)
 
 #------------------------------------------------
-# Filter dr for only m1Results
+# Filter dr for only Results
 #------------------------------------------------
 d <- dr %>%
-  filter(resultConcerns=="m1Results")
+  filter(resultConcerns=="Results")
 
 #------------------------------------------------
 # factor for box plot
 #------------------------------------------------
-timesNumber <- factor(d$n)        # for boxPlot
-# an          <- factor(d$algoName)
+timesNumber<- factor(d$n) # for boxPlot
 
 #------------------------------------------------
-# Draw the graph in box plot
+# Draw the graph
 #------------------------------------------------
 d %>%
-  ggplot(aes(x = timesNumber, y = (makespan/m1Optimal), color=algoName, shape=algoName))+
-  #ggplot(aes(x = timesNumber, y = (makespan-m1Optimal), color=algoName, shape=algoName))+
+  ggplot(aes(x = timesNumber, y = (makespan/LowBound), color=algoName, shape=algoName))+
   geom_boxplot()+
   facet_grid(d$m ~ d$generateMethode)
   labs(
     title = "Comparison",
-    y = "Normalized Makespan Cmax/Optimal"
+      y = "Normalized Makespan Cmax/Optimal"
   )
-
 #------------------------------------------------
 # Save graph in pdf file
 #------------------------------------------------
-ggsave(file = "gr_n_variable_m1_boxplot.pdf")
-  
+ggsave(file = "rr_n_var_nat_boxplot.pdf")
+

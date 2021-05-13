@@ -36,5 +36,5 @@ d %>%
     y = "Makespan normalisé Cmax-optimal"
   )
 
-  ggsave(file = "gr_m_variable_m1_point.pdf")
+  ggsave(file = "rr_m_var_m1_point.pdf")
 

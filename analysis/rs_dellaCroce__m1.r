@@ -280,7 +280,7 @@ tm_results<-rbind(tm_results,tm_result_raw)
 #
 #///////////////////////////////////////////////////////////////
 
-write.table(mk_results, file = "cp_dellaCroce_m1_makespan.csv",
+write.table(mk_results, file = "rr_dellaCroce_m1_makespan.csv",
             sep = "\t", row.names = F)
-write.table(tm_results, file = "cp_dellaCroce_m1_time.csv",
+write.table(tm_results, file = "rr_dellaCroce_m1_time.csv",
             sep = "\t", row.names = F)
