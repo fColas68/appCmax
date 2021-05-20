@@ -13,32 +13,32 @@ def main():
     #                                                                       #
     #               Modify the desired values                               #
     #               save py file (ctrl+s)                                   #
-    #               then press F5 to execute                                #
+    #               then press F5 to execute   (if idle is used)                             #
     #                                                                       #
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "uni_test3d_m3_100n200_400i_unif_LPT"      # string
+    campaignName         = "uni_test3d_m101_150n10_1000i_unif_LPT"      # string
     campaignUser         = "FCO"            # string
-
+    
     # Seed ================================================================
     seedForce            = None             # integer
 
     # Job Set size with N_NumberEnd >= N_NumberBegin ======================
-    N_NumberBegin        = 200             # int
-    N_NumberEnd          = 400             # int
+    N_NumberBegin        = 10               # int
+    N_NumberEnd          = 1000             # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use N_NumberBegin and N_NumberEnd if  N_List = [])
     N_List               = []
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
-    M_NumberBegin        = 3                # int
-    M_NumberEnd          = 100               # int
+    M_NumberBegin        = 101                # int
+    M_NumberEnd          = 150               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
     M_List               = []
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 1                # int
-    matNonUniformNumber = 0                # int 
+    matUniformNumber    = 1                 # int
+    matNonUniformNumber = 0                 # int 
     matGammaNumber      = 0                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
@@ -52,9 +52,9 @@ def main():
     # Properties of generation ============================================
     nAb                 = 1.0                # float
     nBb                 = 1000.0             # float
-    nAlpah              = 1.0               # float
-    nBeta               = 1.0               # float
-    nLambda             = 1.0               # float
+    nAlpah              = 1.0               # float for gamma (k) and beta (alpha)
+    nBeta               = 1.0               # float for gamma ()
+    nLambda             = 1.0               # float for exponential (lambda)
 
       #Algorithms ==========================================================
     useLPT              = 1                 # 1 or 0
