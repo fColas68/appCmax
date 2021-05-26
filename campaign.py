@@ -22,6 +22,7 @@ class Campaign():
         self.campaignDate        = time.strftime("%d%m%Y")  
         self.campaignUser        = campaignUser
         self.compainCompleteName = s.campaignFileResultName(self.campaignName,self.campaignUser,self.campaignDate)
+        
         #---------------------------------------------------------------
         self.N_NumberBegin        = N_NumberBegin
         self.N_NumberEnd          = N_NumberEnd
@@ -29,20 +30,24 @@ class Campaign():
         self.M_NumberBegin        = M_NumberBegin
         self.M_NumberEnd          = M_NumberEnd
         self.M_List               = M_List
+        
         #---------------------------------------------------------------
         self.matUniformNumber    = matUniformNumber
         self.matNonUniformNumber = matNonUniformNumber
         self.matGammaNumber      = matGammaNumber
         self.matBetaNumber       = matBetaNumber
         self.matExponentialNumber= matExponentialNumber
+        
         #---------------------------------------------------------------
         self.matRealFiles        = matRealFiles[:]
+        
         #---------------------------------------------------------------
         self.a                   = a
         self.b                   = b
         self.alpha               = alpha
         self.beta                = beta
         self.lambd               = lambd
+        
         #---------------------------------------------------------------
         self.seed = None #essential 
         if seedForce:

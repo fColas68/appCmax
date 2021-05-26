@@ -18,9 +18,8 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "uni_test3d_m101_150n10_1000i_unif_LPT"      # string
+    campaignName         = "uni_test3d_m101_150n10_1000i_unif_SLACK"      # string
     campaignUser         = "FCO"            # string
-    
     # Seed ================================================================
     seedForce            = None             # integer
 
@@ -53,12 +52,12 @@ def main():
     nAb                 = 1.0                # float
     nBb                 = 1000.0             # float
     nAlpah              = 1.0               # float for gamma (k) and beta (alpha)
-    nBeta               = 1.0               # float for gamma ()
+    nBeta               = 1.0               # float for gamma (theta)
     nLambda             = 1.0               # float for exponential (lambda)
 
       #Algorithms ==========================================================
-    useLPT              = 1                 # 1 or 0
-    useSLACK            = 0                 # 1 or 0
+    useLPT              = 0                 # 1 or 0
+    useSLACK            = 1                 # 1 or 0
     useLDM              = 0                 # 1 or 0
     useCOMBINE          = 0                 # 1 or 0
     useMULTIFIT         = 0                 # 1 or 0
@@ -84,12 +83,26 @@ def main():
     print("===============================================================")
     print("Results computation                                            ")
     print("===============================================================")
-    c = cp.Campaign(campaignName, campaignUser, N_NumberBegin, N_NumberEnd, N_List, M_NumberBegin, M_NumberEnd, M_List, matUniformNumber, matNonUniformNumber, matGammaNumber, matBetaNumber, matExponentialNumber, matRealFiles, nAb, nBb, nAlpah, nBeta, nLambda, seedForce)
+    c = cp.Campaign(campaignName, campaignUser,
+                    N_NumberBegin, N_NumberEnd, N_List,
+                    M_NumberBegin, M_NumberEnd, M_List,
+                    matUniformNumber,
+                    matNonUniformNumber,
+                    matGammaNumber,
+                    matBetaNumber,
+                    matExponentialNumber,
+                    matRealFiles,
+                    nAb,
+                    nBb,
+                    nAlpah,
+                    nBeta,
+                    nLambda,
+                    seedForce)
     #
-    if useLPT==1: c.runAlgorithm(cmm.lpt)
-    if useSLACK==1: c.runAlgorithm(cmm.slack)
-    if useLDM==1: c.runAlgorithm(cmm.ldm)
-    if useCOMBINE==1: c.runAlgorithm(cmm.combine)
+    if useLPT==1:      c.runAlgorithm(cmm.lpt)
+    if useSLACK==1:    c.runAlgorithm(cmm.slack)
+    if useLDM==1:      c.runAlgorithm(cmm.ldm)
+    if useCOMBINE==1:  c.runAlgorithm(cmm.combine)
     if useMULTIFIT==1: c.runAlgorithm(cmm.multifit)
     c.exportCSV()
 
