@@ -28,7 +28,7 @@ d <- data %>%
   filter(resultConcerns=="m1Results")
 
 val <- (d$m1Optimal/d$LowBound)  # value
-job <- d$n         # x
+job <- d$m1_n     # x
 proc<- d$m        # Y
 
 algo<- d$algoName[1]
