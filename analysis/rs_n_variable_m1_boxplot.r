@@ -24,7 +24,7 @@ d <- dr %>%
 #------------------------------------------------
 # factor for box plot
 #------------------------------------------------
-timesNumber <- factor(d$n)        # for boxPlot
+timesNumber <- factor(d$m1_n)        # for boxPlot
 # an          <- factor(d$algoName)
 
 #------------------------------------------------

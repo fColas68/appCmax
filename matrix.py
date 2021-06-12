@@ -187,6 +187,7 @@ class PTimes:
         #elif (self.generateMethode == "REEL"):
         else:
             self.Times  = real_p(fileName)
+            self.n = len(self.Times)
             
         # ENDIF
 
@@ -561,7 +562,7 @@ def getStatIndicators(l, m):
                 getMeanTimePerMachine(l, m),
                 stat.mean(l),
                 sc.gmean(l),
-                sc.hmean(l),
+                0, #sc.hmean(l),
                 stat.median(l),
                 min(l), max(l),
                 stat.pstdev(l,mu),

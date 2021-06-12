@@ -18,12 +18,12 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campNames_5 = ["dCroce_1_100_i50_m5_n10_50_100_500_1000",
-                   "dCroce_1_1000_i50_m5_n10_50_100_500_1000",
-                   "dCroce_1_10000_i50_m5_n10_50_100_500_1000"]
-    campNames_x = ["dCroce_1_100_i40_m10_25_n50_100_500_1000",
-                   "dCroce_1_1000_i40_m10_25_n50_100_500_1000",
-                   "dCroce_1_10000_i40_m10_25_n50_100_500_1000"]
+    campNames_5 = ["dCroce_1_100_i50_m5_n10_50_100_500_1000_",
+                   "dCroce_1_1000_i50_m5_n10_50_100_500_1000_",
+                   "dCroce_1_10000_i50_m5_n10_50_100_500_1000_"]
+    campNames_x = ["dCroce_1_100_i40_m10_25_n50_100_500_1000_",
+                   "dCroce_1_1000_i40_m10_25_n50_100_500_1000_",
+                   "dCroce_1_10000_i40_m10_25_n50_100_500_1000_"]
     bValues = [100, 1000, 10000]
 
     campaignUser         = "FCO"            # string
@@ -37,9 +37,9 @@ def main():
     M_NumberBegin        = 1                # int
     M_NumberEnd          = 0               # int
     # Job set generation methods ===========================================
-    matUniformNumber    = 10                # int
-    matNonUniformNumber = 10                 # int 
-    matGammaNumber      = 0                 # int
+    matUniformNumber    = 0                # int
+    matNonUniformNumber = 0                 # int 
+    matGammaNumber      = 10                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
     # From Parallel WorkLoad Archive ======================================
@@ -68,7 +68,7 @@ def main():
     print("Results computation                                            ")
     print("===============================================================")
     
-    for camp in range(50):
+    for camp in range(10):
         for b in range(3):
             
             #====================================================================

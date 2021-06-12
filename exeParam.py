@@ -18,7 +18,7 @@ def main():
     # #######################################################################
 
     #Campaign title and name ==============================================
-    campaignName         = "uni_test3d_m101_150n10_1000i_unif_SLACK"      # string
+    campaignName         = "uni_test3d_m5_50n10_1000i_gamma_LDM"      # string
     campaignUser         = "FCO"            # string
     # Seed ================================================================
     seedForce            = None             # integer
@@ -30,15 +30,15 @@ def main():
     N_List               = []
 
     # Machines number with M_NumberEnd >= M_NumberBegin ===================
-    M_NumberBegin        = 101                # int
-    M_NumberEnd          = 150               # int
+    M_NumberBegin        = 5                # int
+    M_NumberEnd          = 50               # int
     # OR LIST OF JOBS Numbers (N_List has priority.  use M_NumberBegin and M_NumberEnd if  M_List = [])
     M_List               = []
 
     # Job set generation methods ===========================================
-    matUniformNumber    = 1                 # int
+    matUniformNumber    = 0                 # int
     matNonUniformNumber = 0                 # int 
-    matGammaNumber      = 0                 # int
+    matGammaNumber      = 1                 # int
     matBetaNumber       = 0                 # int
     matExponentialNumber= 0                 # int
 
@@ -49,16 +49,16 @@ def main():
     matRealFiles        = pwa.pwaFileChoice(0)
 
     # Properties of generation ============================================
-    nAb                 = 1.0                # float
-    nBb                 = 1000.0             # float
+    nAb                 = 1.0               # float
+    nBb                 = 1000.0            # float
     nAlpah              = 1.0               # float for gamma (k) and beta (alpha)
     nBeta               = 1.0               # float for gamma (theta)
     nLambda             = 1.0               # float for exponential (lambda)
 
       #Algorithms ==========================================================
     useLPT              = 0                 # 1 or 0
-    useSLACK            = 1                 # 1 or 0
-    useLDM              = 0                 # 1 or 0
+    useSLACK            = 0                 # 1 or 0
+    useLDM              = 1                 # 1 or 0
     useCOMBINE          = 0                 # 1 or 0
     useMULTIFIT         = 0                 # 1 or 0
 
