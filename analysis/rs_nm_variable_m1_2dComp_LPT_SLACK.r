@@ -134,14 +134,15 @@ dfw %>%
   geom_point(aes(x=500, y=25),colour="red", size=1)+
   geom_point(aes(x=1000,y=25),colour="red", size=1)+
 
+  labs(
+    title = "Comparaison entre LPT et SLACK",
+    x = "nombre de jobs",
+    y = "nombre de machines"
+  )+
+
   #==================================
   # grid comparison
   #==================================
   facet_grid(rGenerateMethode~.)
 
-labs(
-  title = "Comparaison entre LPT et SLACK",
-  x = "nombre de jobs",
-  y = "nombre de machines"
-)
   
