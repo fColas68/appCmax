@@ -80,7 +80,10 @@ df %>%
   geom_point(aes(x=100, y=25),colour="red", size=1)+
   geom_point(aes(x=500, y=25),colour="red", size=1)+
   geom_point(aes(x=1000,y=25),colour="red", size=1)+
-  
+  labs(title = "Comportement de LPT, SLACK, COMBINE, LDM suivant différentes distributions",
+        colour = "Makespan relatif",
+        x = "nombre de jobs",
+        y = "nombre de machines")+
   #==================================
   # grid comparison
   #==================================
